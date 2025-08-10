@@ -1,8 +1,8 @@
 # Pandashop.md Test Automation Framework 🏗️
 
-Комплексный фреймворк автоматизации тестирования для Pandashop.md, реализующий принципы **Test Pyramid** с правильным распределением тестов по уровням.
+Comprehensive test automation framework for Pandashop.md implementing **Test Pyramid** principles with proper test distribution across different levels.
 
-## 📊 Архитектура Test Pyramid
+## 📊 Test Pyramid Architecture
 
 ```
         🔺 E2E Tests (20 tests - 10%)
@@ -10,110 +10,110 @@
     🔳🔳🔳🔳 API Tests (140 tests - 70%)
 ```
 
-### Распределение тестов:
-- **API Tests: 140 тестов (70%)** - Бизнес-логика, контракты, производительность
-- **UI Component Tests: 40 тестов (20%)** - Компоненты и взаимодействия  
-- **E2E Tests: 20 тестов (10%)** - Полные пользовательские сценарии
+### Test Distribution:
+- **API Tests: 140 tests (70%)** - Business logic, contracts, and performance
+- **UI Component Tests: 40 tests (20%)** - Component interactions and behavior  
+- **E2E Tests: 20 tests (10%)** - Complete user journeys and critical flows
 
-## 🛠️ Технологический стек
+## 🛠️ Technology Stack
 
-- **Playwright + TypeScript** - Единая платформа для всех уровней тестирования
-- **Cucumber/Gherkin** - BDD сценарии для части API тестов (40 тестов)
-- **Zod** - Валидация схем API и типизация во время выполнения
-- **Faker.js** - Генерация тестовых данных
-- **Allure** - Отчетность (опционально)
+- **Playwright + TypeScript** - Unified platform for all testing levels
+- **Cucumber/Gherkin** - BDD scenarios for API tests (40 tests)
+- **Zod** - API schema validation and runtime type checking
+- **Faker.js** - Test data generation
+- **Allure** - Advanced reporting (optional)
 
-## 📁 Структура проекта
+## 📁 Project Structure
 
 ```
 tests/
-├── api/                     # API Tests (140 тестов)
-│   ├── bdd/                 # Gherkin BDD сценарии (40 тестов)
-│   │   ├── features/        # .feature файлы
-│   │   ├── step-definitions/ # Шаги для Cucumber
-│   │   └── support/         # Поддержка Cucumber
-│   ├── pure/                # Чистые API тесты (60 тестов)
-│   ├── contracts/           # Тесты контрактов API (20 тестов)
-│   ├── performance/         # Тесты производительности (20 тестов)
-│   ├── client/              # API клиент
-│   └── helpers/             # Вспомогательные утилиты
-├── ui/                      # UI Tests (40 тестов)
-│   ├── components/          # Тесты компонентов
+├── api/                     # API Tests (140 tests)
+│   ├── bdd/                 # Gherkin BDD scenarios (40 tests)
+│   │   ├── features/        # .feature files
+│   │   ├── step-definitions/ # Cucumber step definitions
+│   │   └── support/         # Cucumber support files
+│   ├── pure/                # Pure API tests (60 tests)
+│   ├── contracts/           # API contract tests (20 tests)
+│   ├── performance/         # Performance tests (20 tests)
+│   ├── client/              # API client implementation
+│   └── helpers/             # Test utilities
+├── ui/                      # UI Tests (40 tests)
+│   ├── components/          # Component tests
 │   ├── pages/               # Page Object Model
-│   └── shared/              # Общие UI утилиты
-├── e2e/                     # E2E Tests (20 тестов)
-│   ├── journeys/            # Пользовательские сценарии
-│   └── flows/               # Бизнес-процессы
-├── shared/                  # Общие ресурсы
-│   ├── schemas/             # Zod схемы
-│   ├── fixtures/            # Тестовые данные
-│   └── utils/               # Общие утилиты
-└── demo/                    # Демонстрационные тесты
+│   └── shared/              # Shared UI utilities
+├── e2e/                     # E2E Tests (20 tests)
+│   ├── journeys/            # User journey scenarios
+│   └── flows/               # Business process flows
+├── shared/                  # Shared resources
+│   ├── schemas/             # Zod schemas
+│   ├── fixtures/            # Test data fixtures
+│   └── utils/               # Common utilities
+└── demo/                    # Demo and connectivity tests
 ```
 
-## 🚀 Быстрый старт
+## 🚀 Quick Start
 
-### 1. Установка зависимостей
+### 1. Install Dependencies
 ```bash
 npm install
 npx playwright install
 ```
 
-### 2. Запуск демо-тестов
+### 2. Run Demo Tests
 ```bash
-# Демонстрация коннективности и архитектуры
+# Connectivity and architecture demonstration
 npm run test:demo
 
-# Или через Playwright CLI
+# Or using Playwright CLI
 npx playwright test tests/demo --reporter=line
 ```
 
-### 3. Запуск тестов по уровням
+### 3. Run Tests by Level
 
 ```bash
-# API тесты (все 140)
+# API tests (all 140)
 npm run test:api
 
-# Только BDD API тесты (40)
+# BDD API tests only (40)
 npm run test:api:bdd
 
-# Только чистые API тесты (100)
+# Pure API tests only (100)
 npm run test:api:pure
 
-# UI компонентные тесты (40)
+# UI component tests (40)
 npm run test:ui
 
-# E2E тесты (20)
+# E2E tests (20)
 npm run test:e2e
 
-# Вся пирамида (200 тестов)
+# Complete pyramid (200 tests)
 npm run test:pyramid
 ```
 
-## 📋 Доступные скрипты
+## 📋 Available Scripts
 
 ```json
 {
-  "test:pyramid": "Запуск всех 200 тестов пирамиды",
-  "test:api": "Все API тесты (140)",
-  "test:api:bdd": "BDD API тесты с Cucumber (40)",
-  "test:api:pure": "Чистые API тесты (100)", 
-  "test:api:contracts": "Тесты контрактов API",
-  "test:api:performance": "Тесты производительности API",
-  "test:ui": "UI компонентные тесты (40)",
-  "test:e2e": "E2E тесты (20)",
-  "test:demo": "Демонстрационные тесты",
-  "cucumber:api": "BDD API тесты через Cucumber"
+  "test:pyramid": "Run all 200 pyramid tests",
+  "test:api": "All API tests (140)",
+  "test:api:bdd": "BDD API tests with Cucumber (40)",
+  "test:api:pure": "Pure API tests (100)", 
+  "test:api:contracts": "API contract tests",
+  "test:api:performance": "API performance tests",
+  "test:ui": "UI component tests (40)",
+  "test:e2e": "E2E tests (20)",
+  "test:demo": "Demo and connectivity tests",
+  "cucumber:api": "BDD API tests via Cucumber"
 }
 ```
 
-## 🔧 Конфигурация
+## 🔧 Configuration
 
 ### Playwright Configuration
-- **Проекты**: Отдельные конфигурации для каждого типа тестов
-- **Браузеры**: Chrome, Firefox, Safari для E2E/UI
-- **Таймауты**: Различные для разных уровней тестирования
-- **Отчеты**: HTML, JSON, JUnit, Line reporters
+- **Projects**: Separate configurations for each test type
+- **Browsers**: Chrome, Firefox, Safari for E2E/UI
+- **Timeouts**: Different settings for each testing level
+- **Reports**: HTML, JSON, JUnit, Line reporters
 
 ### Environment Variables
 ```bash
@@ -124,19 +124,19 @@ DEBUG=false
 
 ## 📊 API Testing
 
-### BDD API Tests (40 тестов)
+### BDD API Tests (40 tests)
 ```gherkin
-# Пример: tests/api/bdd/features/catalog-api.feature
-Функция: API Каталога товаров
-  Сценарий: Получение списка товаров
-    Когда я отправляю GET запрос на "/api/v1/products"
-    Тогда код ответа должен быть 200
-    И тело ответа содержит список товаров
+# Example: tests/api/bdd/features/catalog-api.feature
+Feature: Product Catalog API
+  Scenario: Retrieve product list
+    When I send GET request to "/api/v1/products"
+    Then response status should be 200
+    And response body contains product list
 ```
 
-### Pure API Tests (100 тестов)
+### Pure API Tests (100 tests)
 ```typescript
-// Пример: tests/api/pure/cart-api.spec.ts
+// Example: tests/api/pure/cart-api.spec.ts
 test('should add item to cart', async () => {
   const cart = await apiClient.addToCart(productId, 2);
   expect(cart.items).toHaveLength(1);
@@ -145,15 +145,15 @@ test('should add item to cart', async () => {
 ```
 
 ### API Client
-Типизированный клиент с автоматической валидацией через Zod:
+Type-safe client with automatic Zod validation:
 ```typescript
 const products = await apiClient.getProducts({ limit: 20 });
-// products автоматически валидируется ProductListResponseSchema
+// products are automatically validated by ProductListResponseSchema
 ```
 
 ## 🎯 UI Component Testing
 
-Тестирование компонентов интерфейса в изоляции:
+Testing interface components in isolation:
 ```typescript
 test('product card should display correctly', async ({ page }) => {
   await page.goto('/catalog');
@@ -163,22 +163,22 @@ test('product card should display correctly', async ({ page }) => {
 
 ## 🛤️ E2E Testing
 
-Полные пользовательские сценарии:
+Complete user journey scenarios:
 ```typescript
 test('complete purchase journey', async ({ page }) => {
   await page.goto('/');
-  // Полный флоу покупки от поиска до оплаты
+  // Full purchase flow from search to payment
 });
 ```
 
-## 📈 Отчетность
+## 📈 Reporting
 
 ### HTML Reports
 ```bash
 npx playwright show-report
 ```
 
-### Allure Reports (опционально)
+### Allure Reports (optional)
 ```bash
 npm run allure:generate
 npm run allure:open
@@ -197,23 +197,23 @@ DEBUG=true npx playwright test --debug
 
 ## 📝 Best Practices
 
-### 1. Test Pyramid Принципы
-- **70% API** - быстрые, надежные, покрывают бизнес-логику
-- **20% UI** - компоненты и интеграции  
-- **10% E2E** - критические пользовательские сценарии
+### 1. Test Pyramid Principles
+- **70% API** - Fast, reliable, business logic coverage
+- **20% UI** - Component and integration testing  
+- **10% E2E** - Critical user scenarios
 
-### 2. Именование тестов
+### 2. Test Naming Conventions
 - API: `test('should validate product schema', ...)`
 - UI: `test('product filter should work correctly', ...)`  
 - E2E: `test('user can complete purchase journey', ...)`
 
-### 3. Данные для тестов
-- Генерация через Faker.js
-- Валидация через Zod схемы
-- Очистка после тестов
+### 3. Test Data Management
+- Generation via Faker.js
+- Validation through Zod schemas
+- Cleanup after test execution
 
 ### 4. Page Object Model
-Для UI и E2E тестов используется POM паттерн:
+UI and E2E tests use POM pattern:
 ```typescript
 class ProductPage {
   async addToCart(productId: string) { /* ... */ }
@@ -227,17 +227,17 @@ class ProductPage {
 ```yaml
 - name: Run Test Pyramid
   run: |
-    npm run test:api          # 70% - быстро
-    npm run test:ui           # 20% - средне  
-    npm run test:e2e:critical # 10% - медленно
+    npm run test:api          # 70% - fast execution
+    npm run test:ui           # 20% - medium speed  
+    npm run test:e2e:critical # 10% - slow but critical
 ```
 
 ### Parallel Execution
-- API тесты: параллельно по проектам
-- UI тесты: параллельно по браузерам
-- E2E тесты: последовательно (критические)
+- API tests: parallel by projects
+- UI tests: parallel by browsers
+- E2E tests: sequential (critical scenarios)
 
-## 📚 Дополнительные ресурсы
+## 📚 Additional Resources
 
 - [Playwright Documentation](https://playwright.dev/)
 - [Cucumber.js Documentation](https://cucumber.io/docs/cucumber/)
@@ -246,13 +246,13 @@ class ProductPage {
 
 ## 🤝 Contributing
 
-1. Fork репозиторий
-2. Создайте feature branch
-3. Следуйте принципам Test Pyramid
-4. Добавьте тесты для нового функционала
-5. Убедитесь что все тесты проходят
-6. Создайте Pull Request
+1. Fork the repository
+2. Create feature branch
+3. Follow Test Pyramid principles
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Create Pull Request
 
 ---
 
-**🎯 Цель**: Создать надежный, масштабируемый и поддерживаемый фреймворк тестирования, который следует лучшим практикам индустрии и обеспечивает быструю обратную связь при разработке.
+**🎯 Goal**: Create a reliable, scalable and maintainable testing framework that follows industry best practices and provides rapid feedback during development.

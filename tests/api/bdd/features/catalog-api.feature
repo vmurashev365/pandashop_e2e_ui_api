@@ -1,143 +1,142 @@
-# language: ru
-Функция: API Каталога товаров
-  Как пользователь системы
-  Я хочу иметь доступ к API каталога товаров
-  Чтобы получать информацию о продуктах через API
+Feature: Product Catalog API
+  As a system user
+  I want to access the product catalog API
+  So that I can retrieve product information through API
 
-  Предыстория:
-    Дано API Pandashop.md доступно
-    И заголовки запроса содержат "Content-Type: application/json"
+  Background:
+    Given Pandashop.md API is available
+    And request headers contain "Content-Type: application/json"
 
-  Сценарий: Получение списка товаров
-    Когда я отправляю GET запрос на "/api/v1/products"
-    Тогда код ответа должен быть 200
-    И тело ответа содержит список товаров
-    И каждый товар содержит обязательные поля:
-      | поле         | тип    |
+  Scenario: Getting list of products
+    When I send GET request to "/api/v1/products"
+    Then response status should be 200
+    And response body contains products list
+    And each product contains required fields:
+      | field        | type   |
       | id           | string |
       | name         | string |
       | price        | number |
       | currency     | string |
       | availability | string |
-    И время ответа не превышает 2000 мс
+    And response time does not exceed 2000 ms
 
-  Сценарий: Получение товара по ID
-    Дано существует товар с ID "test-product-123"
-    Когда я отправляю GET запрос на "/api/v1/products/test-product-123"
-    Тогда код ответа должен быть 200
-    И тело ответа содержит товар с ID "test-product-123"
-    И товар содержит полную информацию:
-      | поле        | обязательно |
-      | id          | да          |
-      | name        | да          |
-      | description | да          |
-      | price       | да          |
-      | images      | да          |
-      | category    | да          |
-    И время ответа не превышает 1000 мс
+  Scenario: Getting product by ID
+    Given product with ID "test-product-123" exists
+    When I send GET request to "/api/v1/products/test-product-123"
+    Then response status should be 200
+    And response body contains product with ID "test-product-123"
+    And product contains complete information:
+      | field       | required |
+      | id          | yes         |
+      | name        | yes         |
+      | description | yes         |
+      | price       | yes         |
+      | images      | yes         |
+      | category    | yes         |
+    And response time does not exceed 1000 ms
 
-  Сценарий: Получение несуществующего товара
-    Когда я отправляю GET запрос на "/api/v1/products/non-existent-id"
-    Тогда код ответа должен быть 404
-    И тело ответа содержит сообщение об ошибке
-    И заголовок "Content-Type" содержит "application/json"
+  Scenario: Getting non-existent product
+    When I send GET request to "/api/v1/products/non-existent-id"
+    Then response status should be 404
+    And response body contains error message
+    And header "Content-Type" contains "application/json"
 
-  Сценарий: Поиск товаров по запросу
-    Когда я отправляю GET запрос на "/api/v1/products/search" с параметрами:
-      | параметр | значение |
-      | query    | телефон  |
-      | page     | 1        |
-      | limit    | 20       |
-    Тогда код ответа должен быть 200
-    И тело ответа содержит результаты поиска
-    И найденные товары содержат слово "телефон" в названии или описании
-    И количество результатов не превышает 20
-    И время ответа не превышает 3000 мс
+  Scenario: Searching products by query
+    When I send GET request to "/api/v1/products/search" with parameters:
+      | parameter | value   |
+      | query     | phone   |
+      | page      | 1       |
+      | limit     | 20      |
+    Then response status should be 200
+    And response body contains search results
+    And found products contain word "phone" in name or description
+    And result count does not exceed 20
+    And response time does not exceed 3000 ms
 
-  Сценарий: Поиск с пустым результатом
-    Когда я отправляю GET запрос на "/api/v1/products/search" с параметрами:
-      | параметр | значение              |
-      | query    | несуществующийтовар123 |
-    Тогда код ответа должен быть 200
-    И тело ответа содержит пустой список товаров
-    И общее количество результатов равно 0
+  Scenario: Search with empty results
+    When I send GET request to "/api/v1/products/search" with parameters:
+      | parameter | value               |
+      | query     | nonexistentitem123  |
+    Then response status should be 200
+    And response body contains empty products list
+    And total result count equals 0
 
-  Сценарий: Фильтрация товаров по категории
-    Дано существует категория "Электроника" с ID "electronics-123"
-    Когда я отправляю GET запрос на "/api/v1/products" с параметрами:
-      | параметр   | значение        |
+  Scenario: Filter products by category
+    Given category "Electronics" with ID "electronics-123" exists
+    When I send GET request to "/api/v1/products" with parameters:
+      | parameter  | value           |
       | categoryId | electronics-123 |
-    Тогда код ответа должен быть 200
-    И все товары в ответе принадлежат категории "electronics-123"
+    Then response status should be 200
+    And all products in response belong to category "electronics-123"
 
-  Сценарий: Фильтрация товаров по цене
-    Когда я отправляю GET запрос на "/api/v1/products" с параметрами:
-      | параметр | значение |
-      | priceMin | 100      |
-      | priceMax | 500      |
-    Тогда код ответа должен быть 200
-    И все товары в ответе имеют цену от 100 до 500 MDL
+  Scenario: Filter products by price
+    When I send GET request to "/api/v1/products" with parameters:
+      | parameter | value |
+      | priceMin  | 100   |
+      | priceMax  | 500   |
+    Then response status should be 200
+    And all products in response have price between 100 and 500 MDL
 
-  Схема сценария: Пагинация товаров
-    Когда я отправляю GET запрос на "/api/v1/products" с параметрами:
-      | параметр | значение   |
-      | page     | <страница> |
-      | limit    | <лимит>    |
-    Тогда код ответа должен быть 200
-    И в ответе содержится информация о пагинации:
-      | поле       | значение   |
-      | page       | <страница> |
-      | limit      | <лимит>    |
-      | total      | >= 0       |
-      | totalPages | >= 1       |
-    И количество товаров не превышает <лимит>
+  Scenario Outline: Product pagination
+    When I send GET request to "/api/v1/products" with parameters:
+      | parameter | value  |
+      | page      | <page> |
+      | limit     | <limit>|
+    Then response status should be 200
+    And response contains pagination information:
+      | field      | value  |
+      | page       | <page> |
+      | limit      | <limit>|
+      | total      | >= 0   |
+      | totalPages | >= 1   |
+    And product count does not exceed <limit>
 
-    Примеры:
-      | страница | лимит |
-      | 1        | 10    |
-      | 2        | 20    |
-      | 1        | 50    |
+    Examples:
+      | page | limit |
+      | 1    | 10    |
+      | 2    | 20    |
+      | 1    | 50    |
 
-  Сценарий: Валидация некорректных параметров пагинации
-    Когда я отправляю GET запрос на "/api/v1/products" с параметрами:
-      | параметр | значение |
-      | page     | 0        |
-    Тогда код ответа должен быть 400
-    И тело ответа содержит сообщение об ошибке валидации
+  Scenario: Validation of incorrect pagination parameters
+    When I send GET request to "/api/v1/products" with parameters:
+      | parameter | value |
+      | page      | 0     |
+    Then response status should be 400
+    And response body contains validation error message
 
-  Сценарий: Получение категорий товаров
-    Когда я отправляю GET запрос на "/api/v1/categories"
-    Тогда код ответа должен быть 200
-    И тело ответа содержит список категорий
-    И каждая категория содержит поля:
-      | поле | тип    |
-      | id   | string |
-      | name | string |
-    И время ответа не превышает 1000 мс
+  Scenario: Getting product categories
+    When I send GET request to "/api/v1/categories"
+    Then response status should be 200
+    And response body contains categories list
+    And each category contains fields:
+      | field | type   |
+      | id    | string |
+      | name  | string |
+    And response time does not exceed 1000 ms
 
-  Сценарий: Проверка доступности API
-    Когда я отправляю GET запрос на "/api/v1/health"
-    Тогда код ответа должен быть 200
-    И тело ответа содержит:
-      | поле      | значение |
-      | status    | healthy  |
-      | timestamp | present  |
-    И время ответа не превышает 500 мс
+  Scenario: Check API availability
+    When I send GET request to "/api/v1/health"
+    Then response status should be 200
+    And response body contains:
+      | field     | value   |
+      | status    | healthy |
+      | timestamp | present |
+    And response time does not exceed 500 ms
 
-  Сценарий: Проверка CORS заголовков
-    Когда я отправляю OPTIONS запрос на "/api/v1/products"
-    Тогда код ответа должен быть 200
-    И заголовки ответа содержат:
-      | заголовок                   | значение |
-      | Access-Control-Allow-Origin | *        |
-      | Access-Control-Allow-Methods | GET, POST, PUT, DELETE |
+  Scenario: Check CORS headers
+    When I send OPTIONS request to "/api/v1/products"
+    Then response status should be 200
+    And response headers contain:
+      | header                      | value                      |
+      | Access-Control-Allow-Origin | *                          |
+      | Access-Control-Allow-Methods| GET, POST, PUT, DELETE     |
 
-  Сценарий: Обработка Rate Limiting
-    Дано я отправил более 100 запросов за последнюю минуту
-    Когда я отправляю GET запрос на "/api/v1/products"
-    Тогда код ответа должен быть 429
-    И заголовки ответа содержат:
-      | заголовок           | присутствует |
-      | X-RateLimit-Limit   | да           |
-      | X-RateLimit-Remaining | да         |
-      | Retry-After         | да           |
+  Scenario: Handle Rate Limiting
+    Given I have sent more than 100 requests in the last minute
+    When I send GET request to "/api/v1/products"
+    Then response status should be 429
+    And response headers contain:
+      | header                | present |
+      | X-RateLimit-Limit     | yes     |
+      | X-RateLimit-Remaining | yes     |
+      | Retry-After           | yes     |

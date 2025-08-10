@@ -1,4 +1,7 @@
-import { setWorldConstructor, World as CucumberWorld } from '@cucumber/cucumber';
+import {
+  setWorldConstructor,
+  World as CucumberWorld,
+} from "@cucumber/cucumber";
 
 /**
  * World object for Cucumber scenarios
@@ -9,19 +12,19 @@ export interface World extends CucumberWorld {
   response?: any;
   responseTime?: number;
   startTime?: number;
-  
+
   // Test data and context
   testData?: Record<string, any>;
   headers?: Record<string, string>;
-  
+
   // User authentication state
   authToken?: string;
   currentUser?: any;
-  
+
   // Cart and session state
   cartId?: string;
   sessionId?: string;
-  
+
   // Test utilities
   cleanup?: () => Promise<void>;
   debug?: boolean;
@@ -35,19 +38,19 @@ class CustomWorld implements World {
   public response?: any;
   public responseTime?: number;
   public startTime?: number;
-  
+
   // Test data and context
   public testData?: Record<string, any>;
   public headers?: Record<string, string>;
-  
+
   // User authentication state
   public authToken?: string;
   public currentUser?: any;
-  
+
   // Cart and session state
   public cartId?: string;
   public sessionId?: string;
-  
+
   // Test utilities
   public cleanup?: () => Promise<void>;
   public debug?: boolean;
@@ -61,11 +64,11 @@ class CustomWorld implements World {
     this.parameters = options.parameters;
     this.attach = options.attach;
     this.log = options.log;
-    
+
     // Initialize default values
     this.testData = {};
     this.headers = {};
-    this.debug = process.env.DEBUG === 'true';
+    this.debug = process.env.DEBUG === "true";
   }
 
   /**
@@ -112,8 +115,12 @@ class CustomWorld implements World {
   /**
    * Attach screenshot or other media to the test report
    */
-  attachData(data: string | Buffer, mediaType: string = 'text/plain', name?: string): void {
-    const attachmentName = name ? `${name} - ` : '';
+  attachData(
+    data: string | Buffer,
+    mediaType: string = "text/plain",
+    name?: string,
+  ): void {
+    const attachmentName = name ? `${name} - ` : "";
     this.attach(data, mediaType);
     this.log(`📎 ${attachmentName}Attached ${mediaType}`);
   }

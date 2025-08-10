@@ -10,6 +10,7 @@ const common = {
     'progress-bar',
     'html:reports/cucumber-report.html',
     'json:reports/cucumber-report.json',
+    'allure-cucumberjs/reporter:allure-results/cucumber',
     '@cucumber/pretty-formatter'
   ],
   formatOptions: {

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 /**
  * Zod schemas for Pandashop.md API responses
@@ -17,12 +17,12 @@ export const PaginationSchema = z.object({
   page: z.number().int().positive(),
   limit: z.number().int().positive(),
   total: z.number().int().min(0),
-  totalPages: z.number().int().min(0)
+  totalPages: z.number().int().min(0),
 });
 
 // Language and localization
-export const LanguageSchema = z.enum(['ru', 'ro', 'en']);
-export const CurrencySchema = z.enum(['MDL', 'EUR', 'USD']);
+export const LanguageSchema = z.enum(["ru", "ro", "en"]);
+export const CurrencySchema = z.enum(["MDL", "EUR", "USD"]);
 
 // Product schemas
 export const ProductImageSchema = z.object({
@@ -31,7 +31,7 @@ export const ProductImageSchema = z.object({
   alt: z.string().optional(),
   width: z.number().int().positive().optional(),
   height: z.number().int().positive().optional(),
-  isPrimary: z.boolean().default(false)
+  isPrimary: z.boolean().default(false),
 });
 
 export const ProductCategorySchema = z.object({
@@ -41,7 +41,7 @@ export const ProductCategorySchema = z.object({
   parentId: IdSchema.optional(),
   description: z.string().optional(),
   imageUrl: UrlSchema.optional(),
-  isActive: z.boolean().default(true)
+  isActive: z.boolean().default(true),
 });
 
 export const ProductVariantSchema = z.object({
@@ -52,7 +52,7 @@ export const ProductVariantSchema = z.object({
   comparePrice: MoneySchema.optional(),
   inStock: z.boolean(),
   stockQuantity: QuantitySchema.optional(),
-  attributes: z.record(z.string()).optional()
+  attributes: z.record(z.string()).optional(),
 });
 
 export const ProductSchema = z.object({
@@ -77,22 +77,24 @@ export const ProductSchema = z.object({
   isActive: z.boolean().default(true),
   isFeatured: z.boolean().default(false),
   createdAt: TimestampSchema,
-  updatedAt: TimestampSchema
+  updatedAt: TimestampSchema,
 });
 
 // Product list response
 export const ProductListResponseSchema = z.object({
   products: z.array(ProductSchema),
   pagination: PaginationSchema,
-  filters: z.object({
-    categories: z.array(ProductCategorySchema),
-    priceRange: z.object({
-      min: MoneySchema,
-      max: MoneySchema
-    }),
-    brands: z.array(z.string()),
-    attributes: z.record(z.array(z.string()))
-  }).optional()
+  filters: z
+    .object({
+      categories: z.array(ProductCategorySchema),
+      priceRange: z.object({
+        min: MoneySchema,
+        max: MoneySchema,
+      }),
+      brands: z.array(z.string()),
+      attributes: z.record(z.array(z.string())),
+    })
+    .optional(),
 });
 
 // Search schemas
@@ -104,10 +106,10 @@ export const SearchFiltersSchema = z.object({
   inStock: z.boolean().optional(),
   brand: z.string().optional(),
   attributes: z.record(z.string()).optional(),
-  sortBy: z.enum(['price', 'name', 'rating', 'created']).optional(),
-  sortOrder: z.enum(['asc', 'desc']).default('asc'),
+  sortBy: z.enum(["price", "name", "rating", "created"]).optional(),
+  sortOrder: z.enum(["asc", "desc"]).default("asc"),
   page: z.number().int().positive().default(1),
-  limit: z.number().int().positive().max(100).default(20)
+  limit: z.number().int().positive().max(100).default(20),
 });
 
 export const SearchResponseSchema = z.object({
@@ -116,7 +118,7 @@ export const SearchResponseSchema = z.object({
   totalResults: z.number().int().min(0),
   pagination: PaginationSchema,
   suggestions: z.array(z.string()).optional(),
-  facets: z.record(z.array(z.string())).optional()
+  facets: z.record(z.array(z.string())).optional(),
 });
 
 // Cart schemas
@@ -127,7 +129,7 @@ export const CartItemSchema = z.object({
   quantity: QuantitySchema.min(1),
   price: MoneySchema,
   totalPrice: MoneySchema,
-  product: ProductSchema
+  product: ProductSchema,
 });
 
 export const CartSchema = z.object({
@@ -141,13 +143,13 @@ export const CartSchema = z.object({
   total: MoneySchema,
   currency: CurrencySchema,
   createdAt: TimestampSchema,
-  updatedAt: TimestampSchema
+  updatedAt: TimestampSchema,
 });
 
 // User schemas
 export const UserAddressSchema = z.object({
   id: IdSchema,
-  type: z.enum(['billing', 'shipping']),
+  type: z.enum(["billing", "shipping"]),
   firstName: z.string().min(1),
   lastName: z.string().min(1),
   company: z.string().optional(),
@@ -158,7 +160,7 @@ export const UserAddressSchema = z.object({
   postalCode: z.string().min(1),
   country: z.string().min(2),
   phone: z.string().optional(),
-  isDefault: z.boolean().default(false)
+  isDefault: z.boolean().default(false),
 });
 
 export const UserSchema = z.object({
@@ -168,23 +170,23 @@ export const UserSchema = z.object({
   lastName: z.string().min(1),
   phone: z.string().optional(),
   dateOfBirth: z.string().date().optional(),
-  gender: z.enum(['male', 'female', 'other']).optional(),
+  gender: z.enum(["male", "female", "other"]).optional(),
   addresses: z.array(UserAddressSchema).default([]),
   isEmailVerified: z.boolean().default(false),
   isPhoneVerified: z.boolean().default(false),
   createdAt: TimestampSchema,
-  updatedAt: TimestampSchema
+  updatedAt: TimestampSchema,
 });
 
 // Order schemas
 export const OrderStatusSchema = z.enum([
-  'pending',
-  'confirmed',
-  'processing',
-  'shipped',
-  'delivered',
-  'cancelled',
-  'refunded'
+  "pending",
+  "confirmed",
+  "processing",
+  "shipped",
+  "delivered",
+  "cancelled",
+  "refunded",
 ]);
 
 export const OrderItemSchema = z.object({
@@ -195,7 +197,7 @@ export const OrderItemSchema = z.object({
   price: MoneySchema,
   totalPrice: MoneySchema,
   productName: z.string().min(1),
-  productImage: UrlSchema.optional()
+  productImage: UrlSchema.optional(),
 });
 
 export const OrderSchema = z.object({
@@ -213,10 +215,10 @@ export const OrderSchema = z.object({
   total: MoneySchema,
   currency: CurrencySchema,
   paymentMethod: z.string().optional(),
-  paymentStatus: z.enum(['pending', 'paid', 'failed', 'refunded']).optional(),
+  paymentStatus: z.enum(["pending", "paid", "failed", "refunded"]).optional(),
   notes: z.string().optional(),
   createdAt: TimestampSchema,
-  updatedAt: TimestampSchema
+  updatedAt: TimestampSchema,
 });
 
 // API Response wrappers
@@ -225,7 +227,7 @@ export const ApiSuccessResponseSchema = <T extends z.ZodType>(dataSchema: T) =>
     success: z.literal(true),
     data: dataSchema,
     message: z.string().optional(),
-    timestamp: TimestampSchema
+    timestamp: TimestampSchema,
   });
 
 export const ApiErrorResponseSchema = z.object({
@@ -233,16 +235,13 @@ export const ApiErrorResponseSchema = z.object({
   error: z.object({
     code: z.string(),
     message: z.string(),
-    details: z.record(z.any()).optional()
+    details: z.record(z.any()).optional(),
   }),
-  timestamp: TimestampSchema
+  timestamp: TimestampSchema,
 });
 
 export const ApiResponseSchema = <T extends z.ZodType>(dataSchema: T) =>
-  z.union([
-    ApiSuccessResponseSchema(dataSchema),
-    ApiErrorResponseSchema
-  ]);
+  z.union([ApiSuccessResponseSchema(dataSchema), ApiErrorResponseSchema]);
 
 // Type exports for TypeScript
 export type Product = z.infer<typeof ProductSchema>;
@@ -257,6 +256,10 @@ export type UserAddress = z.infer<typeof UserAddressSchema>;
 export type Order = z.infer<typeof OrderSchema>;
 export type OrderItem = z.infer<typeof OrderItemSchema>;
 export type OrderStatus = z.infer<typeof OrderStatusSchema>;
-export type ApiSuccessResponse<T> = z.infer<ReturnType<typeof ApiSuccessResponseSchema<z.ZodType<T>>>>;
+export type ApiSuccessResponse<T> = z.infer<
+  ReturnType<typeof ApiSuccessResponseSchema<z.ZodType<T>>>
+>;
 export type ApiErrorResponse = z.infer<typeof ApiErrorResponseSchema>;
-export type ApiResponse<T> = z.infer<ReturnType<typeof ApiResponseSchema<z.ZodType<T>>>>;
+export type ApiResponse<T> = z.infer<
+  ReturnType<typeof ApiResponseSchema<z.ZodType<T>>>
+>;

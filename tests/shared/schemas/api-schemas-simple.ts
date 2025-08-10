@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 /**
  * Simplified API Schemas for Pandashop.md API Tests
@@ -6,7 +6,7 @@ import { z } from 'zod';
  */
 
 // Currency enum
-export const CurrencySchema = z.enum(['MDL', 'EUR', 'USD']);
+export const CurrencySchema = z.enum(["MDL", "EUR", "USD"]);
 export type Currency = z.infer<typeof CurrencySchema>;
 
 // Base pagination schema
@@ -14,7 +14,7 @@ export const PaginationSchema = z.object({
   page: z.number().int().positive(),
   limit: z.number().int().positive().max(100),
   total: z.number().int().nonnegative(),
-  totalPages: z.number().int().positive()
+  totalPages: z.number().int().positive(),
 });
 export type Pagination = z.infer<typeof PaginationSchema>;
 
@@ -25,12 +25,12 @@ export const ProductSchema = z.object({
   description: z.string(),
   price: z.number().positive(),
   originalPrice: z.number().positive().optional(),
-  currency: CurrencySchema.default('MDL'),
+  currency: CurrencySchema.default("MDL"),
   category: z.string(),
   categoryId: z.string(),
   brand: z.string().optional(),
   sku: z.string(),
-  availability: z.enum(['available', 'out_of_stock', 'pre_order']),
+  availability: z.enum(["available", "out_of_stock", "pre_order"]),
   stock: z.number().int().nonnegative().optional(),
   images: z.array(z.string()),
   tags: z.array(z.string()).optional(),
@@ -39,7 +39,7 @@ export const ProductSchema = z.object({
   specifications: z.record(z.string()).optional(),
   variants: z.array(z.any()).optional(),
   createdAt: z.string(),
-  updatedAt: z.string()
+  updatedAt: z.string(),
 });
 export type Product = z.infer<typeof ProductSchema>;
 
@@ -50,16 +50,16 @@ export const SearchFiltersSchema = z.object({
   priceMin: z.number().positive().optional(),
   priceMax: z.number().positive().optional(),
   brand: z.string().optional(),
-  availability: z.enum(['available', 'out_of_stock', 'pre_order']).optional(),
-  page: z.number().int().positive().default(1),
-  limit: z.number().int().positive().max(100).default(20)
+  availability: z.enum(["available", "out_of_stock", "pre_order"]).optional(),
+  page: z.number().int().positive().default(1).optional(),
+  limit: z.number().int().positive().max(100).default(20).optional(),
 });
 export type SearchFilters = z.infer<typeof SearchFiltersSchema>;
 
 // Product List Response Schema
 export const ProductListResponseSchema = z.object({
   data: z.array(ProductSchema),
-  pagination: PaginationSchema
+  pagination: PaginationSchema,
 });
 export type ProductListResponse = z.infer<typeof ProductListResponseSchema>;
 
@@ -68,14 +68,14 @@ export const SearchResponseSchema = z.object({
   data: z.array(ProductSchema),
   pagination: PaginationSchema,
   searchQuery: z.string(),
-  filters: z.record(z.any()).optional()
+  filters: z.record(z.any()).optional(),
 });
 export type SearchResponse = z.infer<typeof SearchResponseSchema>;
 
 // User Address Schema - simplified
 export const AddressSchema = z.object({
   id: z.string(),
-  type: z.enum(['billing', 'shipping']),
+  type: z.enum(["billing", "shipping"]),
   firstName: z.string(),
   lastName: z.string(),
   company: z.string().optional(),
@@ -84,7 +84,7 @@ export const AddressSchema = z.object({
   postalCode: z.string(),
   country: z.string(),
   phone: z.string().optional(),
-  isDefault: z.boolean()
+  isDefault: z.boolean(),
 });
 export type Address = z.infer<typeof AddressSchema>;
 
@@ -96,7 +96,7 @@ export const UserSchema = z.object({
   lastName: z.string(),
   phone: z.string().optional(),
   dateOfBirth: z.string().optional(),
-  gender: z.enum(['male', 'female', 'other']).optional(),
+  gender: z.enum(["male", "female", "other"]).optional(),
   addresses: z.array(AddressSchema),
   preferences: z.object({
     language: z.string(),
@@ -104,13 +104,13 @@ export const UserSchema = z.object({
     notifications: z.object({
       email: z.boolean(),
       sms: z.boolean(),
-      push: z.boolean()
-    })
+      push: z.boolean(),
+    }),
   }),
   isVerified: z.boolean(),
   isActive: z.boolean(),
   createdAt: z.string(),
-  updatedAt: z.string()
+  updatedAt: z.string(),
 });
 export type User = z.infer<typeof UserSchema>;
 
@@ -121,7 +121,7 @@ export const CartItemSchema = z.object({
   variantId: z.string().optional(),
   quantity: z.number().int().positive(),
   price: z.number().positive(),
-  product: ProductSchema
+  product: ProductSchema,
 });
 export type CartItem = z.infer<typeof CartItemSchema>;
 
@@ -134,9 +134,9 @@ export const CartSchema = z.object({
   shipping: z.number().nonnegative(),
   tax: z.number().nonnegative(),
   total: z.number().nonnegative(),
-  currency: CurrencySchema.default('MDL'),
+  currency: CurrencySchema.default("MDL"),
   createdAt: z.string(),
-  updatedAt: z.string()
+  updatedAt: z.string(),
 });
 export type Cart = z.infer<typeof CartSchema>;
 
@@ -145,14 +145,23 @@ export const OrderSchema = z.object({
   id: z.string(),
   orderNumber: z.string(),
   userId: z.string(),
-  status: z.enum(['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled']),
-  items: z.array(z.object({
-    id: z.string(),
-    productId: z.string(),
-    quantity: z.number().int().positive(),
-    price: z.number().positive(),
-    product: ProductSchema
-  })),
+  status: z.enum([
+    "pending",
+    "confirmed",
+    "processing",
+    "shipped",
+    "delivered",
+    "cancelled",
+  ]),
+  items: z.array(
+    z.object({
+      id: z.string(),
+      productId: z.string(),
+      quantity: z.number().int().positive(),
+      price: z.number().positive(),
+      product: ProductSchema,
+    }),
+  ),
   billingAddress: AddressSchema,
   shippingAddress: AddressSchema,
   subtotal: z.number().nonnegative(),
@@ -162,6 +171,6 @@ export const OrderSchema = z.object({
   currency: CurrencySchema,
   paymentMethod: z.string(),
   createdAt: z.string(),
-  updatedAt: z.string()
+  updatedAt: z.string(),
 });
 export type Order = z.infer<typeof OrderSchema>;

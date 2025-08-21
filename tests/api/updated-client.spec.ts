@@ -21,17 +21,17 @@ test.describe("Updated API Client Test", () => {
   test("should get products successfully", async () => {
     const response = await apiClient.getProducts({ limit: 3 });
     
-    expect(response.products).toBeDefined();
-    expect(response.products.length).toBeGreaterThan(0);
-    expect(response.products.length).toBeLessThanOrEqual(3);
+    expect(response.data).toBeDefined();
+    expect(response.data.length).toBeGreaterThan(0);
+    expect(response.data.length).toBeLessThanOrEqual(3);
     
-    const product = response.products[0];
+    const product = response.data[0];
     expect(product.id).toBeTruthy();
     expect(product.name).toBeTruthy();
     expect(product.price).toBeGreaterThan(0);
     expect(product.currency).toBe("MDL");
     
-    console.log("✅ Products retrieved:", response.products.length);
+    console.log("✅ Products retrieved:", response.data.length);
     console.log("✅ Sample product:", product);
   });
 
@@ -43,10 +43,10 @@ test.describe("Updated API Client Test", () => {
       priceMax: 800,
     });
     
-    expect(response.products).toBeDefined();
-    expect(response.products.length).toBeLessThanOrEqual(2);
+    expect(response.data).toBeDefined();
+    expect(response.data.length).toBeLessThanOrEqual(2);
     
-    console.log("✅ Search results:", response.products.length);
+    console.log("✅ Search results:", response.data.length);
   });
 
   test("should get categories", async () => {

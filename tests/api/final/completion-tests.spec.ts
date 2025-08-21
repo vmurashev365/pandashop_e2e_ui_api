@@ -23,9 +23,9 @@ test.describe("Final API Tests - BDD Style Scenarios", () => {
       
       // Then: Products are returned successfully
       console.log("✅ Then: Products are returned successfully");
-      expect(products).toHaveProperty("products");
-      expect(products.products.length).toBeGreaterThan(0);
-      expect(products.products.length).toBeLessThanOrEqual(10);
+      expect(products).toHaveProperty("data");
+      expect(products.data.length).toBeGreaterThan(0);
+      expect(products.data.length).toBeLessThanOrEqual(10);
       
       // And: Each product has required information
       console.log("✅ And: Each product has required information");
@@ -54,13 +54,13 @@ test.describe("Final API Tests - BDD Style Scenarios", () => {
         // Then: Search results are returned
         console.log(`✅ Then: Search results are returned for "${term}"`);
         expect(searchResults).toHaveProperty("products");
-        expect(Array.isArray(searchResults.products)).toBe(true);
+        expect(Array.isArray(searchResults.data)).toBe(true);
         
         // And: Results have proper structure
         console.log(`✅ And: Results have proper structure`);
         expect(searchResults).toHaveProperty("pagination");
         
-        console.log(`   📊 Found ${searchResults.products.length} results for "${term}"`);
+        console.log(`   📊 Found ${searchResults.data.length} results for "${term}"`);
       }
       
       console.log("✅ Scenario completed: Search functionality verified");

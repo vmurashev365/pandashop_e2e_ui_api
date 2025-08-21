@@ -35,7 +35,7 @@ test.describe("Extended Edge Case Tests - Comprehensive", () => {
           
           // Should handle gracefully or return valid response
           expect(response).toHaveProperty("products");
-          expect(Array.isArray(response.products)).toBe(true);
+          expect(Array.isArray(response.data)).toBe(true);
           
           // Verify pagination values are normalized
           if (response.pagination) {
@@ -43,7 +43,7 @@ test.describe("Extended Edge Case Tests - Comprehensive", () => {
             expect(response.pagination.limit).toBeGreaterThan(0);
           }
           
-          console.log(`✅ ${boundaryTest.name}: ${response.products.length} products returned`);
+          console.log(`✅ ${boundaryTest.name}: ${response.data.length} products returned`);
         } catch (error) {
           // Error responses are acceptable for invalid boundaries
           console.log(`✅ ${boundaryTest.name}: Rejected appropriately - ${(error as Error).message.substring(0, 50)}`);
@@ -132,9 +132,9 @@ test.describe("Extended Edge Case Tests - Comprehensive", () => {
           
           // Should handle various string formats
           expect(response).toHaveProperty("products");
-          expect(Array.isArray(response.products)).toBe(true);
+          expect(Array.isArray(response.data)).toBe(true);
           
-          console.log(`✅ ${stringTest.name}: ${response.products.length} results`);
+          console.log(`✅ ${stringTest.name}: ${response.data.length} results`);
         } catch (error) {
           console.log(`✅ ${stringTest.name}: Handled with error (acceptable)`);
         }
@@ -162,11 +162,11 @@ test.describe("Extended Edge Case Tests - Comprehensive", () => {
           
           results.push({
             query: caseTest,
-            count: response.products.length,
-            products: response.products
+            count: response.data.length,
+            products: response.data
           });
           
-          console.log(`✅ Case test "${caseTest}": ${response.products.length} results`);
+          console.log(`✅ Case test "${caseTest}": ${response.data.length} results`);
         } catch (error) {
           console.log(`⚠️ Case test "${caseTest}" failed`);
         }
@@ -260,7 +260,7 @@ test.describe("Extended Edge Case Tests - Comprehensive", () => {
           .then(response => ({
             request: i + 1,
             success: true,
-            products: response.products.length,
+            products: response.data.length,
             page: response.pagination?.page,
             timestamp: Date.now() - startTime
           }))
@@ -286,7 +286,7 @@ test.describe("Extended Edge Case Tests - Comprehensive", () => {
         if (result.page) {
           expect(result.page).toBeGreaterThan(0);
         }
-        expect(result.products).toBeGreaterThanOrEqual(0);
+        expect(result.data).toBeGreaterThanOrEqual(0);
       });
       
       console.log(`✅ Race condition test: ${successCount}/${concurrentRequests} success`);
@@ -405,10 +405,10 @@ test.describe("Extended Edge Case Tests - Comprehensive", () => {
         // Verify response structure integrity
         expect(response).toHaveProperty("products");
         expect(response).toHaveProperty("pagination");
-        expect(Array.isArray(response.products)).toBe(true);
+        expect(Array.isArray(response.data)).toBe(true);
         
         // Verify each product has required structure
-        response.products.forEach((product, index) => {
+        response.data.forEach((product, index) => {
           expect(product).toHaveProperty("id");
           expect(typeof product.id).toBe("string");
           expect(product.id.length).toBeGreaterThan(0);
@@ -458,12 +458,12 @@ test.describe("Extended Edge Case Tests - Comprehensive", () => {
           
           // Should return valid structure even for empty results
           expect(response).toHaveProperty("products");
-          expect(Array.isArray(response.products)).toBe(true);
+          expect(Array.isArray(response.data)).toBe(true);
           
-          if (response.products.length === 0) {
+          if (response.data.length === 0) {
             console.log(`✅ ${scenario.name}: Empty results handled properly`);
           } else {
-            console.log(`✅ ${scenario.name}: ${response.products.length} unexpected results found`);
+            console.log(`✅ ${scenario.name}: ${response.data.length} unexpected results found`);
           }
         } catch (error) {
           console.log(`✅ ${scenario.name}: Search error handled appropriately`);

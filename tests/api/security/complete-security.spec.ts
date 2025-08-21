@@ -32,7 +32,7 @@ test.describe("API Security Tests", () => {
           
           // Should handle gracefully, not cause server errors
           expect(result).toBeDefined();
-          expect(Array.isArray(result.products)).toBe(true);
+          expect(Array.isArray(result.data)).toBe(true);
           console.log(`✅ Handled SQL injection attempt: ${maliciousInput.substring(0, 20)}...`);
         } catch (error) {
           // Errors should be handled gracefully, not expose system info
@@ -60,8 +60,8 @@ test.describe("API Security Tests", () => {
           });
           
           // Response should not contain unescaped script tags
-          if (result.products.length > 0) {
-            result.products.forEach((product: any) => {
+          if (result.data.length > 0) {
+            result.data.forEach((product: any) => {
               expect(product.name).not.toContain("<script>");
               expect(product.name).not.toContain("javascript:");
               expect(product.id).not.toContain("<script>");
@@ -132,9 +132,9 @@ test.describe("API Security Tests", () => {
           const result = await apiClient.getProducts({ limit });
           
           // Should either work with corrected values or handle gracefully
-          if (result.products) {
-            expect(result.products.length).toBeGreaterThanOrEqual(0);
-            expect(result.products.length).toBeLessThanOrEqual(100); // Reasonable max
+          if (result.data) {
+            expect(result.data.length).toBeGreaterThanOrEqual(0);
+            expect(result.data.length).toBeLessThanOrEqual(100); // Reasonable max
           }
           
           console.log(`✅ Handled limit value: ${limit}`);
@@ -342,8 +342,8 @@ test.describe("API Security Tests", () => {
           const result = await apiClient.searchProducts({ query: attempt, limit: 1 });
           
           // Should not return file system information
-          if (result.products.length > 0) {
-            result.products.forEach((product: any) => {
+          if (result.data.length > 0) {
+            result.data.forEach((product: any) => {
               expect(product.name).not.toContain("/etc/");
               expect(product.name).not.toContain("passwd");
               expect(product.name).not.toContain("shadow");
@@ -389,7 +389,7 @@ test.describe("API Security Tests", () => {
       expect(health.status).toBe("healthy");
       
       const products = await apiClient.getProducts({ limit: 1 });
-      expect(products.products).toBeDefined();
+      expect(products.data).toBeDefined();
       
       console.log("✅ Public endpoints accessible without authentication");
     });
@@ -439,7 +439,7 @@ test.describe("API Security Tests", () => {
     test("should prevent content injection in product data", async () => {
       const products = await apiClient.getProducts({ limit: 3 });
       
-      products.products.forEach((product: any, index: number) => {
+      products.data.forEach((product: any, index: number) => {
         // Product names should not contain script tags
         expect(product.name).not.toMatch(/<script[\s\S]*?>/i);
         expect(product.name).not.toMatch(/javascript:/i);
@@ -458,7 +458,7 @@ test.describe("API Security Tests", () => {
     test("should validate URL safety in responses", async () => {
       const products = await apiClient.getProducts({ limit: 2 });
       
-      products.products.forEach((product: any) => {
+      products.data.forEach((product: any) => {
         if (product.url) {
           // URLs should be properly formatted
           expect(product.url).toMatch(/^https?:\/\//);

@@ -54,9 +54,9 @@ test.describe("API Contracts - Product Operations", () => {
       // Response structure
       expect(response).toHaveProperty("products");
       expect(response).toHaveProperty("pagination");
-      expect(Array.isArray(response.products)).toBe(true);
-      expect(response.products.length).toBeGreaterThan(0);
-      expect(response.products.length).toBeLessThanOrEqual(5);
+      expect(Array.isArray(response.data)).toBe(true);
+      expect(response.data.length).toBeGreaterThan(0);
+      expect(response.data.length).toBeLessThanOrEqual(5);
       
       // Pagination structure
       expect(response.pagination).toHaveProperty("page");
@@ -68,7 +68,7 @@ test.describe("API Contracts - Product Operations", () => {
     test("should return valid product schema for each item", async () => {
       const response = await apiClient.getProducts({ limit: 3 });
       
-      response.products.forEach((product: any) => {
+      response.data.forEach((product: any) => {
         expect(product).toHaveProperty("id");
         expect(product).toHaveProperty("name");
         expect(product).toHaveProperty("price");
@@ -120,14 +120,14 @@ test.describe("API Contracts - Product Operations", () => {
       
       expect(response).toHaveProperty("products");
       expect(response).toHaveProperty("pagination");
-      expect(Array.isArray(response.products)).toBe(true);
+      expect(Array.isArray(response.data)).toBe(true);
     });
 
     test("should filter by query string", async () => {
       const response = await apiClient.searchProducts({ query: "test", limit: 10 });
       
-      if (response.products.length > 0) {
-        response.products.forEach((product: any) => {
+      if (response.data.length > 0) {
+        response.data.forEach((product: any) => {
           const hasQuery = product.name.toLowerCase().includes("test") || 
                           product.id.toLowerCase().includes("test");
           expect(hasQuery).toBe(true);
@@ -142,7 +142,7 @@ test.describe("API Contracts - Product Operations", () => {
         limit: 10 
       });
       
-      response.products.forEach((product: any) => {
+      response.data.forEach((product: any) => {
         expect(product.price).toBeGreaterThanOrEqual(100);
         expect(product.price).toBeLessThanOrEqual(500);
       });
@@ -168,7 +168,7 @@ test.describe("API Contracts - Product Operations", () => {
         limit: 5
       });
       
-      response.products.forEach((product: any) => {
+      response.data.forEach((product: any) => {
         expect(product.price).toBeGreaterThanOrEqual(100);
         expect(product.price).toBeLessThanOrEqual(1000);
         expect(product.availability).toBe("available");
@@ -179,9 +179,9 @@ test.describe("API Contracts - Product Operations", () => {
   test.describe("Individual Product Contract", () => {
     test("should return valid product by ID", async () => {
       const products = await apiClient.getProducts({ limit: 1 });
-      expect(products.products.length).toBeGreaterThan(0);
+      expect(products.data.length).toBeGreaterThan(0);
       
-      const productId = products.products[0].id;
+      const productId = products.data[0].id;
       const product = await apiClient.getProductById(productId);
       
       if (product) {
@@ -200,7 +200,7 @@ test.describe("API Contracts - Product Operations", () => {
 
     test("should return product with valid URL", async () => {
       const products = await apiClient.getProducts({ limit: 1 });
-      const productId = products.products[0].id;
+      const productId = products.data[0].id;
       const product = await apiClient.getProductById(productId);
       
       if (product?.url) {

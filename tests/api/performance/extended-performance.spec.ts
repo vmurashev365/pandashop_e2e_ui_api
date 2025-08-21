@@ -281,13 +281,13 @@ test.describe("Extended Performance Tests - Advanced", () => {
             limit: test.limit,
             responseTime,
             payloadSize,
-            productCount: response.products.length
+            productCount: response.data.length
           });
           
-          expect(response.products.length).toBeGreaterThan(0);
+          expect(response.data.length).toBeGreaterThan(0);
           expect(responseTime).toBeLessThan(15000); // 15 seconds max
           
-          console.log(`✅ ${test.name} payload: ${responseTime}ms, ${payloadSize} bytes, ${response.products.length} products`);
+          console.log(`✅ ${test.name} payload: ${responseTime}ms, ${payloadSize} bytes, ${response.data.length} products`);
           
         } catch (error) {
           console.log(`⚠️ ${test.name} payload test failed: ${(error as Error).message}`);

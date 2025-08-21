@@ -33,7 +33,7 @@ test.describe("Extended Security Tests - Advanced", () => {
           
           // Should handle gracefully without causing errors
           expect(response).toHaveProperty("products");
-          expect(Array.isArray(response.products)).toBe(true);
+          expect(Array.isArray(response.data)).toBe(true);
           
           console.log(`✅ Unicode input handled safely: "${input.substring(0, 20)}..."`);
         } catch (error) {
@@ -129,7 +129,7 @@ test.describe("Extended Security Tests - Advanced", () => {
           
           // Should handle parameter pollution gracefully
           expect(response).toHaveProperty("products");
-          expect(Array.isArray(response.products)).toBe(true);
+          expect(Array.isArray(response.data)).toBe(true);
           
           console.log(`✅ ${pollutionTest.name}: Handled gracefully`);
         } catch (error) {
@@ -351,9 +351,9 @@ test.describe("Extended Security Tests - Advanced", () => {
           // Verify data structure consistency
           expect(response).toHaveProperty("products");
           expect(response).toHaveProperty("pagination");
-          expect(Array.isArray(response.products)).toBe(true);
+          expect(Array.isArray(response.data)).toBe(true);
           
-          console.log(`✅ Consistency test ${i + 1}: ${response.products.length} products`);
+          console.log(`✅ Consistency test ${i + 1}: ${response.data.length} products`);
         } catch (error) {
           console.log(`⚠️ Consistency test ${i + 1} failed: ${(error as Error).message}`);
         }

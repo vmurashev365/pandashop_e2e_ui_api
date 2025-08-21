@@ -55,9 +55,9 @@ test.describe("Extended API Contracts - Advanced", () => {
       // Should return valid structure even for empty query
       expect(response).toHaveProperty("products");
       expect(response).toHaveProperty("pagination");
-      expect(Array.isArray(response.products)).toBe(true);
+      expect(Array.isArray(response.data)).toBe(true);
       
-      console.log(`✅ Empty search query handled: ${response.products.length} results`);
+      console.log(`✅ Empty search query handled: ${response.data.length} results`);
     });
 
     test("should validate maximum limit constraints", async () => {
@@ -65,9 +65,9 @@ test.describe("Extended API Contracts - Advanced", () => {
         const response = await apiClient.getProducts({ limit: 999999 });
         
         // Should either limit the results or return error
-        if (response.products) {
-          expect(response.products.length).toBeLessThanOrEqual(1000); // Reasonable max
-          console.log(`✅ Large limit constrained to: ${response.products.length}`);
+        if (response.data) {
+          expect(response.data.length).toBeLessThanOrEqual(1000); // Reasonable max
+          console.log(`✅ Large limit constrained to: ${response.data.length}`);
         }
       } catch (error) {
         // Error is also acceptable for extreme limits
@@ -83,9 +83,9 @@ test.describe("Extended API Contracts - Advanced", () => {
           const response = await apiClient.searchProducts({ query, limit: 2 });
           
           expect(response).toHaveProperty("products");
-          expect(Array.isArray(response.products)).toBe(true);
+          expect(Array.isArray(response.data)).toBe(true);
           
-          console.log(`✅ Special query handled: "${query}" -> ${response.products.length} results`);
+          console.log(`✅ Special query handled: "${query}" -> ${response.data.length} results`);
         } catch (error) {
           console.log(`✅ Special query "${query}" handled with error (acceptable)`);
         }
@@ -118,10 +118,10 @@ test.describe("Extended API Contracts - Advanced", () => {
         const lastPageResponse = await apiClient.getProducts({ page: lastPage, limit: 10 });
         
         expect(lastPageResponse.pagination.page).toBe(lastPage);
-        expect(lastPageResponse.products.length).toBeGreaterThan(0);
-        expect(lastPageResponse.products.length).toBeLessThanOrEqual(10);
+        expect(lastPageResponse.data.length).toBeGreaterThan(0);
+        expect(lastPageResponse.data.length).toBeLessThanOrEqual(10);
         
-        console.log(`✅ Last page (${lastPage}) handled: ${lastPageResponse.products.length} items`);
+        console.log(`✅ Last page (${lastPage}) handled: ${lastPageResponse.data.length} items`);
       } else {
         console.log(`✅ Single page dataset detected`);
       }
@@ -132,12 +132,12 @@ test.describe("Extended API Contracts - Advanced", () => {
         const response = await apiClient.getProducts({ page: 99999, limit: 10 });
         
         // Should return empty results or handle gracefully
-        expect(Array.isArray(response.products)).toBe(true);
+        expect(Array.isArray(response.data)).toBe(true);
         
-        if (response.products.length === 0) {
+        if (response.data.length === 0) {
           console.log(`✅ Beyond last page returns empty results`);
         } else {
-          console.log(`✅ Beyond last page handled: ${response.products.length} items`);
+          console.log(`✅ Beyond last page handled: ${response.data.length} items`);
         }
       } catch (error) {
         console.log(`✅ Beyond last page handled with error (acceptable)`);
@@ -149,8 +149,8 @@ test.describe("Extended API Contracts - Advanced", () => {
     test("should validate product ID data types", async () => {
       const products = await apiClient.getProducts({ limit: 5 });
       
-      if (products.products.length > 0) {
-        const product = products.products[0];
+      if (products.data.length > 0) {
+        const product = products.data[0];
         
         expect(typeof product.id).toBe("string");
         expect(product.id.length).toBeGreaterThan(0);
@@ -189,7 +189,7 @@ test.describe("Extended API Contracts - Advanced", () => {
     test("should validate numeric fields consistency", async () => {
       const response = await apiClient.getProducts({ limit: 3 });
       
-      response.products.forEach((product, index) => {
+      response.data.forEach((product, index) => {
         // If product has numeric fields, they should be consistent
         if (product.price !== undefined) {
           expect(typeof product.price === "number" || typeof product.price === "string").toBe(true);
@@ -257,10 +257,10 @@ test.describe("Extended API Contracts - Advanced", () => {
         
         const response = await apiClient.getProducts(customParams);
         
-        expect(response.products).toBeDefined();
-        expect(response.products.length).toBeLessThanOrEqual(3);
+        expect(response.data).toBeDefined();
+        expect(response.data.length).toBeLessThanOrEqual(3);
         
-        console.log(`✅ Unknown parameters ignored gracefully: ${response.products.length} results`);
+        console.log(`✅ Unknown parameters ignored gracefully: ${response.data.length} results`);
       } catch (error) {
         console.log(`✅ Unknown parameters handled with validation error (acceptable)`);
       }
@@ -279,7 +279,7 @@ test.describe("Extended API Contracts - Advanced", () => {
           // Both should have consistent structure
           expect(response).toHaveProperty("products");
           expect(response).toHaveProperty("pagination");
-          expect(Array.isArray(response.products)).toBe(true);
+          expect(Array.isArray(response.data)).toBe(true);
           
           console.log(`✅ ${endpoint.name} endpoint structure consistent`);
         } catch (error) {

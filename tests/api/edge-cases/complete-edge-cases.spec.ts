@@ -17,13 +17,13 @@ test.describe("API Edge Cases Tests", () => {
     test("should handle minimum page size", async () => {
       const result = await apiClient.getProducts({ limit: 1, page: 1 });
       
-      expect(result.products.length).toBeLessThanOrEqual(1);
+      expect(result.data.length).toBeLessThanOrEqual(1);
       expect(result.pagination.limit).toBe(1);
       expect(result.pagination.page).toBe(1);
       
-      if (result.products.length > 0) {
-        expect(result.products[0]).toHaveProperty("id");
-        expect(result.products[0]).toHaveProperty("name");
+      if (result.data.length > 0) {
+        expect(result.data[0]).toHaveProperty("id");
+        expect(result.data[0]).toHaveProperty("name");
       }
       
       console.log("✅ Minimum page size handled");
@@ -32,14 +32,14 @@ test.describe("API Edge Cases Tests", () => {
     test("should handle maximum reasonable page size", async () => {
       const result = await apiClient.getProducts({ limit: 100, page: 1 });
       
-      expect(result.products.length).toBeLessThanOrEqual(100);
+      expect(result.data.length).toBeLessThanOrEqual(100);
       expect(result.pagination.limit).toBe(100);
       
       // Should not crash or timeout with large page size
-      expect(result.products).toBeDefined();
-      expect(Array.isArray(result.products)).toBe(true);
+      expect(result.data).toBeDefined();
+      expect(Array.isArray(result.data)).toBe(true);
       
-      console.log(`✅ Large page size handled: ${result.products.length} products`);
+      console.log(`✅ Large page size handled: ${result.data.length} products`);
     });
 
     test("should handle edge case page numbers", async () => {
@@ -58,9 +58,9 @@ test.describe("API Edge Cases Tests", () => {
           
           // Should either correct the page number or return empty results
           expect(result).toBeDefined();
-          expect(Array.isArray(result.products)).toBe(true);
+          expect(Array.isArray(result.data)).toBe(true);
           
-          console.log(`✅ Page ${testCase.page}: ${result.products.length} products`);
+          console.log(`✅ Page ${testCase.page}: ${result.data.length} products`);
         } catch (error) {
           // Errors should be handled gracefully
           expect((error as Error).message).toBeDefined();
@@ -86,15 +86,15 @@ test.describe("API Edge Cases Tests", () => {
         });
         
         expect(result).toBeDefined();
-        expect(Array.isArray(result.products)).toBe(true);
+        expect(Array.isArray(result.data)).toBe(true);
         
         if (test.expectEmpty) {
           // Might be empty for unrealistic price ranges
-          console.log(`✅ Price range ${test.min}-${test.max}: ${result.products.length} products`);
+          console.log(`✅ Price range ${test.min}-${test.max}: ${result.data.length} products`);
         }
         
-        if (result.products.length > 0) {
-          result.products.forEach((product: any) => {
+        if (result.data.length > 0) {
+          result.data.forEach((product: any) => {
             if (test.min !== undefined) {
               expect(product.price).toBeGreaterThanOrEqual(test.min);
             }
@@ -123,9 +123,9 @@ test.describe("API Edge Cases Tests", () => {
           });
           
           expect(result).toBeDefined();
-          expect(Array.isArray(result.products)).toBe(true);
+          expect(Array.isArray(result.data)).toBe(true);
           
-          console.log(`✅ Empty query handled: ${result.products.length} products`);
+          console.log(`✅ Empty query handled: ${result.data.length} products`);
         } catch (error) {
           expect((error as Error).message).toBeDefined();
           console.log(`✅ Empty query rejected gracefully`);
@@ -192,11 +192,11 @@ test.describe("API Edge Cases Tests", () => {
         const products = await apiClient.getProducts({ limit: 1 });
         
         // Verify response structure is as expected
-        expect(products).toHaveProperty("products");
+        expect(products).toHaveProperty("data");
         expect(products).toHaveProperty("pagination");
         
-        if (products.products.length > 0) {
-          const product = products.products[0];
+        if (products.data.length > 0) {
+          const product = products.data[0];
           expect(product).toHaveProperty("id");
           expect(product).toHaveProperty("name");
           expect(product).toHaveProperty("price");
@@ -213,8 +213,8 @@ test.describe("API Edge Cases Tests", () => {
     test("should handle duplicate product IDs", async () => {
       const products = await apiClient.getProducts({ limit: 20 });
       
-      if (products.products.length > 1) {
-        const productIds = products.products.map((p: any) => p.id);
+      if (products.data.length > 1) {
+        const productIds = products.data.map((p: any) => p.id);
         const uniqueIds = new Set(productIds);
         
         // Check for duplicates
@@ -232,7 +232,7 @@ test.describe("API Edge Cases Tests", () => {
     test("should handle missing or null product fields", async () => {
       const products = await apiClient.getProducts({ limit: 10 });
       
-      products.products.forEach((product: any, index: number) => {
+      products.data.forEach((product: any, index: number) => {
         // Required fields should exist
         expect(product.id).toBeDefined();
         expect(product.name).toBeDefined();
@@ -259,12 +259,12 @@ test.describe("API Edge Cases Tests", () => {
     test("should handle currency consistency", async () => {
       const products = await apiClient.getProducts({ limit: 15 });
       
-      const currencies = new Set(products.products.map((p: any) => p.currency));
+      const currencies = new Set(products.data.map((p: any) => p.currency));
       
       // Should have consistent currency (MDL for Pandashop.md)
       expect(currencies.size).toBeLessThanOrEqual(2); // Allow for minor variations
       
-      products.products.forEach((product: any) => {
+      products.data.forEach((product: any) => {
         expect(["MDL", "lei", "лей"]).toContainEqual(
           expect.stringMatching(new RegExp(product.currency, "i"))
         );
@@ -276,7 +276,7 @@ test.describe("API Edge Cases Tests", () => {
     test("should handle availability status consistency", async () => {
       const products = await apiClient.getProducts({ limit: 10 });
       
-      const availabilityStatuses = new Set(products.products.map((p: any) => p.availability));
+      const availabilityStatuses = new Set(products.data.map((p: any) => p.availability));
       
       // Should only contain valid availability statuses
       availabilityStatuses.forEach(status => {
@@ -441,7 +441,7 @@ test.describe("API Edge Cases Tests", () => {
         const products = await apiClient.getProducts({ limit: 5 });
         
         // Verify minimum required fields exist
-        products.products.forEach((product: any, index: number) => {
+        products.data.forEach((product: any, index: number) => {
           expect(product).toHaveProperty("id");
           expect(product).toHaveProperty("name");
           expect(product).toHaveProperty("price");

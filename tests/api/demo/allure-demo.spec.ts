@@ -79,18 +79,18 @@ test.describe("API Tests with Allure Reporting", () => {
       
       // Validate response structure
       expect(productsResponse).toHaveProperty('products');
-      expect(Array.isArray(productsResponse.products)).toBe(true);
-      expect(productsResponse.products.length).toBeGreaterThan(0);
-      expect(productsResponse.products.length).toBeLessThanOrEqual(10);
+      expect(Array.isArray(productsResponse.data)).toBe(true);
+      expect(productsResponse.data.length).toBeGreaterThan(0);
+      expect(productsResponse.data.length).toBeLessThanOrEqual(10);
       
-      console.log(`✅ Retrieved ${productsResponse.products.length} products in ${responseTime}ms`);
+      console.log(`✅ Retrieved ${productsResponse.data.length} products in ${responseTime}ms`);
     });
 
     await AllureReporter.step('Validate product data structure', async () => {
       const products = await apiClient.getProducts({ limit: 5 });
       
       // Validate each product structure
-      for (const product of products.products) {
+      for (const product of products.data) {
         expect(product).toHaveProperty('id');
         expect(product).toHaveProperty('name');
         expect(product).toHaveProperty('price');
@@ -116,11 +116,11 @@ test.describe("API Tests with Allure Reporting", () => {
       // Add sample product data to report
       await AllureReporter.attachment(
         'Sample Product Data',
-        JSON.stringify(products.products[0], null, 2),
+        JSON.stringify(products.data[0], null, 2),
         'application/json'
       );
       
-      console.log(`✅ Validated data structure for ${products.products.length} products`);
+      console.log(`✅ Validated data structure for ${products.data.length} products`);
     });
   });
 
@@ -146,10 +146,10 @@ test.describe("API Tests with Allure Reporting", () => {
       
       // Validate search results
       expect(searchResults).toHaveProperty('products');
-      expect(Array.isArray(searchResults.products)).toBe(true);
-      expect(searchResults.products.length).toBeLessThanOrEqual(5);
+      expect(Array.isArray(searchResults.data)).toBe(true);
+      expect(searchResults.data.length).toBeLessThanOrEqual(5);
       
-      console.log(`✅ Search for "${searchParams.query}" returned ${searchResults.products.length} results in ${responseTime}ms`);
+      console.log(`✅ Search for "${searchParams.query}" returned ${searchResults.data.length} results in ${responseTime}ms`);
     });
 
     await AllureReporter.step('Test empty search handling', async () => {

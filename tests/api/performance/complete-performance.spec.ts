@@ -29,7 +29,7 @@ test.describe("API Performance Tests", () => {
       const products = await apiClient.getProducts({ limit: 5 });
       const responseTime = Date.now() - startTime;
       
-      expect(products.products.length).toBeGreaterThan(0);
+      expect(products.data.length).toBeGreaterThan(0);
       expect(responseTime).toBeLessThan(5000);
       console.log(`✅ Product list: ${responseTime}ms`);
     });
@@ -97,8 +97,8 @@ test.describe("API Performance Tests", () => {
         const products = await apiClient.getProducts({ limit: 3, page: i + 1 });
         const reqTime = Date.now() - reqStart;
         
-        results.push({ page: i + 1, count: products.products.length, time: reqTime });
-        expect(products.products.length).toBeGreaterThan(0);
+        results.push({ page: i + 1, count: products.data.length, time: reqTime });
+        expect(products.data.length).toBeGreaterThan(0);
       }
       
       const totalTime = Date.now() - startTime;
@@ -119,7 +119,7 @@ test.describe("API Performance Tests", () => {
         const searchResults = await apiClient.searchProducts({ query, limit: 2 });
         const searchTime = Date.now() - searchStart;
         
-        results.push({ query, count: searchResults.products.length, time: searchTime });
+        results.push({ query, count: searchResults.data.length, time: searchTime });
       }
       
       const totalTime = Date.now() - startTime;
@@ -163,7 +163,7 @@ test.describe("API Performance Tests", () => {
       const totalTime = Date.now() - startTime;
       
       results.forEach((result, index) => {
-        expect(result.products.length).toBeGreaterThan(0);
+        expect(result.data.length).toBeGreaterThan(0);
         expect(result.pagination.page).toBe(index + 1);
       });
       
@@ -232,7 +232,7 @@ test.describe("API Performance Tests", () => {
       const avgTime = totalTime / burstSize;
       
       results.forEach(result => {
-        expect(result.products.length).toBeGreaterThan(0);
+        expect(result.data.length).toBeGreaterThan(0);
       });
       
       expect(totalTime).toBeLessThan(20000); // 20 seconds for burst
@@ -259,7 +259,7 @@ test.describe("API Performance Tests", () => {
         
         results.push({ 
           query: search.query, 
-          count: result.products.length, 
+          count: result.data.length, 
           time: searchTime 
         });
       }
@@ -412,8 +412,8 @@ test.describe("API Performance Tests", () => {
         results.push({
           limit,
           time,
-          count: response.products.length,
-          ratio: time / response.products.length
+          count: response.data.length,
+          ratio: time / response.data.length
         });
       }
       
@@ -432,10 +432,10 @@ test.describe("API Performance Tests", () => {
       expect(health.status).toBe("healthy");
       
       const products = await apiClient.getProducts({ limit: 5 });
-      expect(products.products.length).toBeGreaterThan(0);
+      expect(products.data.length).toBeGreaterThan(0);
       
       const searchResults = await apiClient.searchProducts({ query: "test", limit: 3 });
-      expect(Array.isArray(searchResults.products)).toBe(true);
+      expect(Array.isArray(searchResults.data)).toBe(true);
       
       const categories = await apiClient.getCategories();
       expect(categories.length).toBeGreaterThan(0);

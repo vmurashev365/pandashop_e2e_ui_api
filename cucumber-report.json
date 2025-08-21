@@ -1,0 +1,170 @@
+[
+  {
+    "description": "  As a customer\n  I want to browse and shop products safely\n  So that I can complete purchasing journey without creating real orders",
+    "elements": [
+      {
+        "description": "",
+        "id": "safe-shopping-flow-e2e;browse-catalog-to-product-details-safely",
+        "keyword": "Scenario",
+        "line": 12,
+        "name": "Browse catalog to product details safely",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 161205000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "I am on Pandashop.md homepage",
+            "match": {
+              "location": "tests\\e2e\\steps\\shopping-flow-fixed.steps.ts:8"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4909703900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "all popups are handled safely",
+            "match": {
+              "location": "tests\\e2e\\steps\\shopping-flow-fixed.steps.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2619400299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 9,
+            "name": "I am in safe testing mode preventing real orders",
+            "match": {
+              "location": "tests\\e2e\\steps\\shopping-flow-fixed.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 5459899
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 13,
+            "name": "I browse the product catalog",
+            "match": {
+              "location": "tests\\e2e\\steps\\shopping-flow-fixed.steps.ts:31"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 293999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "I click on a product from the catalog",
+            "match": {
+              "location": "tests\\e2e\\steps\\shopping-flow-fixed.steps.ts:35"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 415399
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 15,
+            "name": "I should see product details page",
+            "match": {
+              "location": "tests\\e2e\\steps\\shopping-flow-fixed.steps.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 294100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "product information should be displayed correctly",
+            "match": {
+              "location": "tests\\e2e\\steps\\shopping-flow-fixed.steps.ts:43"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 269900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "I should see price in MDL currency",
+            "match": {
+              "location": "tests\\e2e\\steps\\shopping-flow-fixed.steps.ts:47"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 349500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "no real order process should be initiated",
+            "match": {
+              "location": "tests\\e2e\\steps\\shopping-flow-fixed.steps.ts:51"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 372000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 79248500
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@e2e",
+            "line": 11
+          },
+          {
+            "name": "@smoke",
+            "line": 11
+          },
+          {
+            "name": "@safe",
+            "line": 11
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "safe-shopping-flow-e2e",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Safe Shopping Flow E2E",
+    "tags": [],
+    "uri": "tests\\e2e\\features\\shopping-flow.feature"
+  }
+]

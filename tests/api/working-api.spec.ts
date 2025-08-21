@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { WorkingPandashopAPIClient } from "./client/working-pandashop-api-client";
+import { TestConfig } from "../shared/config/test-config";
 
 test.describe("Working Pandashop API Client", () => {
   let apiClient: WorkingPandashopAPIClient;
@@ -22,12 +23,12 @@ test.describe("Working Pandashop API Client", () => {
   test("Should get products from sitemap", async () => {
     const result = await apiClient.getProducts({ limit: 5 });
     
-    expect(result.products).toBeDefined();
-    expect(result.products.length).toBeGreaterThan(0);
-    expect(result.products.length).toBeLessThanOrEqual(5);
+    expect(result.data).toBeDefined();
+    expect(result.data.length).toBeGreaterThan(0);
+    expect(result.data.length).toBeLessThanOrEqual(5);
     
     // Check product structure
-    const product = result.products[0];
+    const product = result.data[0];
     expect(product.id).toBeTruthy();
     expect(product.name).toBeTruthy();
     expect(product.price).toBeGreaterThan(0);
@@ -39,7 +40,7 @@ test.describe("Working Pandashop API Client", () => {
     expect(result.pagination.limit).toBe(5);
     expect(result.pagination.total).toBeGreaterThan(0);
     
-    console.log("✅ Products found:", result.products.length);
+    console.log("✅ Products found:", result.data.length);
     console.log("✅ Sample product:", product);
   });
 
@@ -62,16 +63,16 @@ test.describe("Working Pandashop API Client", () => {
       priceMax: 500,
     });
     
-    expect(result.products).toBeDefined();
-    expect(result.products.length).toBeLessThanOrEqual(3);
+    expect(result.data).toBeDefined();
+    expect(result.data.length).toBeLessThanOrEqual(3);
     
     // Check that all products match price filter
-    result.products.forEach((product: any) => {
+    result.data.forEach((product: any) => {
       expect(product.price).toBeGreaterThanOrEqual(100);
       expect(product.price).toBeLessThanOrEqual(500);
     });
     
-    console.log("✅ Search results:", result.products.length);
+    console.log("✅ Search results:", result.data.length);
   });
 
   test("Should handle cart operations", async () => {
@@ -90,7 +91,7 @@ test.describe("Working Pandashop API Client", () => {
 
   test("Should get base URL", async () => {
     const baseUrl = apiClient.getBaseUrl();
-    expect(baseUrl).toBe("https://www.pandashop.md");
+    expect(baseUrl).toBe(TestConfig.baseUrl);
     
     console.log("✅ Base URL:", baseUrl);
   });

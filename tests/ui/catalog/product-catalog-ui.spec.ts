@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { TestConfig } from "../../shared/config/test-config";
 import { CatalogPage } from "../../shared/pages/catalog-page";
 
 /**
@@ -70,7 +71,7 @@ test.describe("Product Catalog UI Tests", () => {
 
   test.describe("Navigation and Filtering", () => {
     test("should have working main navigation menu", async ({ page }) => {
-      await page.goto("https://www.pandashop.md/");
+      await page.goto(TestConfig.getFullUrl());
       
       // Look for navigation elements
       const navSelectors = [

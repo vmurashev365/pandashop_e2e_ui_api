@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { PopupHandler } from "../shared/utils/popup-handler";
+import { HomePage } from "../shared/pages/home-page";
+import { TestConfig } from "../shared/config/test-config";
 
 /**
  * E2E Tests - Safe User Journeys (No Real Orders)
@@ -25,51 +27,39 @@ test.describe("Safe E2E User Journeys", () => {
   test("E2E: Browse catalog → View product → Add to cart (Safe)", async ({ page }) => {
     console.log("🛡️ Starting safe E2E journey: Catalog → Product → Cart");
     
-    // Step 1: Navigate to main page
-    await page.goto("https://www.pandashop.md/");
-    await PopupHandler.waitAndHandlePopups(page);
+    // Step 1: Navigate to main page using Page Object
+    const homePage = new HomePage(page);
+    await homePage.open();
+    await homePage.verifyHomepageLoaded();
+    console.log(`✅ Step 1: Main page loaded using POM`);
     
-    const title = await page.title();
-    expect(title.length).toBeGreaterThan(0);
-    console.log(`✅ Step 1: Main page loaded - "${title}"`);
-    
-    // Step 2: Browse catalog
-    const catalogElements = page.locator('a, .category, .product, [class*="product"]');
-    const catalogCount = await catalogElements.count();
+    // Step 2: Browse catalog using Page Object methods
+    const catalogCount = await homePage.getCatalogElementsCount();
     expect(catalogCount).toBeGreaterThan(0);
     console.log(`✅ Step 2: Catalog browsing available - ${catalogCount} clickable elements`);
     
-    // Step 3: Search for products (if search is available)
-    const searchInput = page.locator('input[type="search"], input[placeholder*="поиск"], input[placeholder*="search"]').first();
+    // Step 3: Search for products using Page Object
+    const searchPerformed = await homePage.search(TestConfig.testData.searchTerms.phones);
     
-    if (await searchInput.count() > 0 && await searchInput.isVisible()) {
-      await searchInput.fill("телефон");
-      await searchInput.press('Enter');
-      await page.waitForLoadState("networkidle");
-      
-      console.log(`✅ Step 3: Search functionality tested`);
-      console.log(`   Search URL: ${page.url()}`);
+    if (searchPerformed) {
+      console.log(`✅ Step 3: Search functionality tested via POM`);
+      console.log(`   Search URL: ${homePage.getCurrentUrl()}`);
     } else {
       console.log(`ℹ️ Step 3: Search not available, continuing journey`);
     }
     
-    // Step 4: Check for product listings
-    const productListings = page.locator('img, .item, .card, [class*="product"]');
-    const productCount = await productListings.count();
+    // Step 4: Check for product listings using Page Object
+    const productCount = await homePage.getProductListingsCount();
     console.log(`✅ Step 4: Product listings visible - ${productCount} elements`);
     
-    // Step 5: Test cart access (UI only)
-    const cartElements = page.locator('a[href*="cart"], .cart, [class*="cart"]');
+    // Step 5: Test cart access using Page Object
+    const cartAccessible = await homePage.isCartAccessible();
     
-    if (await cartElements.count() > 0) {
-      const cartLink = cartElements.first();
+    if (cartAccessible) {
+      const cartUrl = await homePage.accessCart();
       
-      if (await cartLink.isVisible()) {
-        await cartLink.click();
-        await page.waitForLoadState("networkidle");
-        
-        const cartUrl = page.url();
-        console.log(`✅ Step 5: Cart access successful - ${cartUrl}`);
+      if (cartUrl) {
+        console.log(`✅ Step 5: Cart access successful via POM - ${cartUrl}`);
         
         // Check cart interface
         const cartInterface = page.locator('body');
@@ -84,53 +74,24 @@ test.describe("Safe E2E User Journeys", () => {
       }
     }
     
-    console.log("🛡️ Safe E2E journey completed - NO real transactions performed");
+    console.log("🛡️ Safe E2E journey completed using POM - NO real transactions performed");
   });
 
   test("E2E: Search → Filter → Product view journey (Safe)", async ({ page }) => {
     console.log("🛡️ Starting safe E2E journey: Search → Filter → Product");
     
-    // Step 1: Start at homepage
-    await page.goto("https://www.pandashop.md/");
-    await page.waitForLoadState("networkidle");
-    console.log(`✅ Step 1: Homepage loaded`);
+    // Step 1: Start at homepage using Page Object
+    const homePage = new HomePage(page);
+    await homePage.open();
+    console.log(`✅ Step 1: Homepage loaded via POM`);
     
-    // Step 2: Perform search
-    const searchSelectors = [
-      'input[type="search"]',
-      'input[placeholder*="поиск"]',
-      'input[placeholder*="search"]',
-      '.search input',
-      '#search'
-    ];
+    // Step 2: Perform search using Page Object
+    const searchPerformed = await homePage.search(TestConfig.testData.searchTerms.general);
     
-    let searchPerformed = false;
-    
-    for (const selector of searchSelectors) {
-      const searchInput = page.locator(selector).first();
-      
-      if (await searchInput.count() > 0 && await searchInput.isVisible()) {
-        await searchInput.fill("товары");
-        
-        // Look for search button or use Enter
-        const searchButton = page.locator('button[type="submit"], .search-button, button:has-text("поиск")').first();
-        
-        if (await searchButton.count() > 0 && await searchButton.isVisible()) {
-          await searchButton.click();
-        } else {
-          await searchInput.press('Enter');
-        }
-        
-        await page.waitForLoadState("networkidle");
-        searchPerformed = true;
-        
-        console.log(`✅ Step 2: Search performed with selector ${selector}`);
-        console.log(`   Search results URL: ${page.url()}`);
-        break;
-      }
-    }
-    
-    if (!searchPerformed) {
+    if (searchPerformed) {
+      console.log(`✅ Step 2: Search performed via POM`);
+      console.log(`   Search results URL: ${homePage.getCurrentUrl()}`);
+    } else {
       console.log(`ℹ️ Step 2: Search not available, testing navigation instead`);
       
       // Try category navigation instead
@@ -138,7 +99,8 @@ test.describe("Safe E2E User Journeys", () => {
       
       if (await categoryLinks.count() > 0 && await categoryLinks.isVisible()) {
         await categoryLinks.click();
-        await page.waitForLoadState("networkidle");
+        await page.waitForLoadState("domcontentloaded");
+        await page.waitForTimeout(1000); // Wait for category page
         console.log(`✅ Step 2: Category navigation performed instead`);
       }
     }
@@ -217,10 +179,11 @@ test.describe("Safe E2E User Journeys", () => {
     
     // Step 1: Test mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
-    await page.goto("https://www.pandashop.md/");
-    await page.waitForLoadState("networkidle");
     
-    console.log(`✅ Step 1: Mobile viewport set (375x667)`);
+    const homePage = new HomePage(page);
+    await homePage.open();
+    
+    console.log(`✅ Step 1: Mobile viewport set (375x667) - POM used`);
     
     // Step 2: Test mobile navigation
     const mobileMenuSelectors = [
@@ -269,11 +232,11 @@ test.describe("Safe E2E User Journeys", () => {
       const firstTouchable = touchableElements.first();
       
       if (await firstTouchable.isVisible()) {
-        // Test tap interaction
-        await firstTouchable.tap();
+        // Test mobile interaction (using click instead of tap for browser compatibility)
+        await firstTouchable.click();
         await page.waitForTimeout(500);
         
-        console.log(`✅ Step 3: Touch interaction tested on ${touchCount} touchable elements`);
+        console.log(`✅ Step 3: Mobile interaction tested on ${touchCount} touchable elements`);
       }
     }
     
@@ -297,9 +260,9 @@ test.describe("Safe E2E User Journeys", () => {
   test("E2E: Form interaction journey (Safe - No Submission)", async ({ page }) => {
     console.log("🛡️ Starting safe form interaction journey");
     
-    // Step 1: Navigate to site
-    await page.goto("https://www.pandashop.md/");
-    await page.waitForLoadState("networkidle");
+    // Step 1: Navigate to site using Page Object
+    const homePage = new HomePage(page);
+    await homePage.open();
     
     // Step 2: Look for any forms on the site
     const formSelectors = [
@@ -331,7 +294,7 @@ test.describe("Safe E2E User Journeys", () => {
             
             if (tagName === 'input' || tagName === 'textarea') {
               // Test field interaction without submission
-              const testValue = tagName === 'input' ? 'test@example.com' : 'Тестовое сообщение';
+              const testValue = tagName === 'input' ? TestConfig.testData.testEmail : TestConfig.testData.testMessage;
               
               await element.fill(testValue);
               const inputValue = await element.inputValue();
@@ -390,14 +353,14 @@ test.describe("Safe E2E User Journeys", () => {
   test("E2E: Performance and loading journey (Safe)", async ({ page }) => {
     console.log("🛡️ Starting safe performance testing journey");
     
-    // Step 1: Measure page load time
+    // Step 1: Measure page load time using Page Object
     const startTime = Date.now();
     
-    await page.goto("https://www.pandashop.md/");
-    await page.waitForLoadState("networkidle");
+    const homePage = new HomePage(page);
+    await homePage.open();
     
     const loadTime = Date.now() - startTime;
-    console.log(`✅ Step 1: Page load time measured - ${loadTime}ms`);
+    console.log(`✅ Step 1: Page load time measured via POM - ${loadTime}ms`);
     
     // Step 2: Check for performance indicators
     const performanceMetrics = await page.evaluate(() => {

@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import { TestConfig } from "../../shared/config/test-config";
 
 /**
  * Working Pandashop.md API Client
@@ -17,7 +18,7 @@ export interface Product {
 }
 
 export interface ProductListResponse {
-  products: Product[];
+  data: Product[];
   pagination: {
     page: number;
     limit: number;
@@ -39,7 +40,7 @@ export interface SearchFilters {
 
 export class WorkingPandashopAPIClient {
   private client: AxiosInstance;
-  private baseUrl = "https://www.pandashop.md";
+  private baseUrl = TestConfig.baseUrl;
 
   constructor(baseUrl?: string) {
     if (baseUrl) {
@@ -48,9 +49,9 @@ export class WorkingPandashopAPIClient {
 
     this.client = axios.create({
       baseURL: this.baseUrl,
-      timeout: 30000,
+      timeout: TestConfig.apiDefaults.timeout,
       headers: {
-        "User-Agent": "Mozilla/5.0 (compatible; Test-Framework/1.0)",
+        "User-Agent": TestConfig.browser.userAgent,
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Accept-Language": "ru,en;q=0.5",
         "Accept-Encoding": "gzip, deflate",
@@ -91,7 +92,7 @@ export class WorkingPandashopAPIClient {
       });
       
       return {
-        products,
+        data: products,
         pagination: {
           page: page,
           limit: limit,
@@ -141,7 +142,7 @@ export class WorkingPandashopAPIClient {
       // For now, return filtered products from sitemap
       const allProducts = await this.getProducts({ page: 1, limit: 100 });
       
-      let filteredProducts = allProducts.products;
+      let filteredProducts = allProducts.data;
       
       if (filters.query) {
         const query = filters.query.toLowerCase();
@@ -170,7 +171,7 @@ export class WorkingPandashopAPIClient {
       const paginatedProducts = filteredProducts.slice(startIndex, startIndex + limit);
       
       return {
-        products: paginatedProducts,
+        data: paginatedProducts,
         pagination: {
           page,
           limit,

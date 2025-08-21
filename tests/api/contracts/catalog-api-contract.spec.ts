@@ -4,7 +4,7 @@ import { APITestHelpers } from "../helpers/api-test-helpers";
 import {
   ProductListResponseSchema,
   ProductSchema,
-} from "../../shared/schemas/api-schemas-simple";
+} from "../../shared/schemas/realistic-api-schemas";
 
 /**
  * API Contract Tests - Products Catalog
@@ -143,11 +143,9 @@ test.describe("Products API Contract Tests", () => {
 
         expect(validatedProduct.id).toBe(productId);
         expect(validatedProduct.name).toBeDefined();
-        expect(validatedProduct.description).toBeDefined();
         expect(validatedProduct.price).toBeGreaterThan(0);
         expect(validatedProduct.currency).toBe("MDL");
-        expect(validatedProduct.createdAt).toBeDefined();
-        expect(validatedProduct.updatedAt).toBeDefined();
+        expect(validatedProduct.availability).toBeDefined();
       }
     });
 

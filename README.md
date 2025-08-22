@@ -178,11 +178,103 @@ test('complete purchase journey', async ({ page }) => {
 npx playwright show-report
 ```
 
-### Allure Reports (optional)
+### Allure Technical Reports
+
 ```bash
+# Step 1: Generate Allure report files
 npm run allure:generate
+
+# Step 2: Serve Allure report (recommended approach)
+npm run allure:serve
+# ✅ This will automatically open browser with interactive dashboard
+# ✅ Avoids CORS issues and provides full functionality
+
+# Alternative: Open static files (may have limitations)
 npm run allure:open
 ```
+
+#### 📊 Allure Report Features:
+- **Overview**: Test execution summary with trends
+- **Categories**: Failed tests grouped by failure type  
+- **Suites**: Detailed test structure and hierarchy
+- **Graphs**: Visual trends and timeline analysis
+- **Timeline**: Execution timeline with parallel test visualization
+
+**💡 Tip**: Always use `npm run allure:serve` for the best experience. The BDD reports contain detailed instructions for accessing Allure technical data.
+
+#### 🚀 Complete Reporting Workflow:
+```bash
+# 1. Run tests and generate all reports
+npm run test:pyramid
+
+# 2. View business-friendly BDD reports
+start EXECUTION_BDD_REPORT.html      # Executive summary with pyramid metrics
+start GHERKIN_BDD_BUSINESS_REPORT.html  # Feature-based business report
+
+# 3. Access technical details (follow instructions in BDD reports)
+npm run allure:serve  # Comprehensive technical analysis
+```
+
+### 📋 BDD Gherkin Business Reports
+
+Generate comprehensive business-friendly reports from BDD test execution:
+
+#### 🔄 Generate BDD Business Report
+```bash
+# Generate BDD Gherkin Business Report from latest test execution
+npx playwright test --reporter=@cucumber/html-formatter
+
+# Generate comprehensive Test Execution BDD Report (EXECUTION_BDD_REPORT.html)
+npm run test:pyramid  # Automatically generates the business-friendly HTML report
+```
+
+#### 📊 Available BDD Report Types
+
+1. **BDD Gherkin Business Report** (`GHERKIN_BDD_BUSINESS_REPORT.html`)
+   - Stakeholder-friendly format
+   - Feature scenarios overview
+   - Pass/Fail business logic validation
+   ```bash
+   open GHERKIN_BDD_BUSINESS_REPORT.html
+   ```
+
+2. **Test Execution BDD Report** (`EXECUTION_BDD_REPORT.html`)
+   - Detailed step-by-step execution
+   - Screenshots for failed scenarios
+   - Timeline and duration analysis
+   - Test Pyramid visualization with business impact
+   ```bash
+   start EXECUTION_BDD_REPORT.html
+   ```
+
+#### 🎯 Business Report Features
+- **Feature Overview**: High-level business functionality status
+- **Scenario Results**: Individual test case outcomes
+- **Step Details**: Granular execution information
+- **Screenshots**: Visual evidence for UI scenarios
+- **Metrics**: Success rate, execution time, coverage
+
+#### 📝 Generate Custom BDD Reports
+```bash
+# Generate with custom configuration
+npx cucumber-js tests/e2e/features/ --format html:reports/custom-bdd-report.html
+
+# Generate with JSON output for further processing
+npx cucumber-js tests/e2e/features/ --format json:reports/bdd-results.json
+```
+
+#### 🔍 View Reports
+```bash
+# Open BDD Gherkin Business Report in default browser (Windows)
+start GHERKIN_BDD_BUSINESS_REPORT.html
+
+# Open Test Execution BDD Report in default browser (Windows)  
+start EXECUTION_BDD_REPORT.html
+
+# Or manually navigate to the files in your browser
+```
+
+**💡 Tip**: BDD reports are automatically updated after each test run and provide business stakeholders with clear visibility into feature validation and system behavior.
 
 ## 🔍 Debugging
 

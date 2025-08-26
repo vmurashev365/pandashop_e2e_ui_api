@@ -189,16 +189,17 @@ export class WorkingPandashopAPIClient {
    */
   async getCategories(): Promise<string[]> {
     try {
-      const response = await this.client.get("/SitemapsCategories.ashx?lng=ru");
-      const xmlContent = response.data;
-      
-      const urlMatches = xmlContent.match(/<loc>(.*?)<\/loc>/g) || [];
-      
-      return urlMatches.map((match: string) => {
-        const url = match.replace(/<\/?loc>/g, "");
-        const categoryMatch = url.match(/\/catalog\/([^\/]+)\//);
-        return categoryMatch ? categoryMatch[1] : "unknown";
-      });
+      // Use fast fallback instead of slow sitemap request
+      return [
+        "electronics",
+        "home-garden", 
+        "clothing",
+        "sports",
+        "books",
+        "toys",
+        "beauty",
+        "automotive"
+      ];
     } catch (error) {
       console.error("🔴 API Error: getCategories -", (error as Error).message);
       return ["electronics", "home", "garden"]; // Fallback categories

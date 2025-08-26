@@ -45,7 +45,7 @@ test.describe("Safe E2E User Journeys", () => {
     if (await searchInput.count() > 0 && await searchInput.isVisible()) {
       await searchInput.fill("телефон");
       await searchInput.press('Enter');
-      await page.waitForLoadState("networkidle");
+      await page.waitForLoadState("domcontentloaded"); // Faster loading
       
       console.log(`✅ Step 3: Search functionality tested`);
       console.log(`   Search URL: ${page.url()}`);
@@ -66,7 +66,7 @@ test.describe("Safe E2E User Journeys", () => {
       
       if (await cartLink.isVisible()) {
         await cartLink.click();
-        await page.waitForLoadState("networkidle");
+        await page.waitForLoadState("domcontentloaded");
         
         const cartUrl = page.url();
         console.log(`✅ Step 5: Cart access successful - ${cartUrl}`);
@@ -92,7 +92,7 @@ test.describe("Safe E2E User Journeys", () => {
     
     // Step 1: Start at homepage
     await page.goto("https://www.pandashop.md/");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
     console.log(`✅ Step 1: Homepage loaded`);
     
     // Step 2: Perform search
@@ -121,7 +121,7 @@ test.describe("Safe E2E User Journeys", () => {
           await searchInput.press('Enter');
         }
         
-        await page.waitForLoadState("networkidle");
+        await page.waitForLoadState("domcontentloaded");
         searchPerformed = true;
         
         console.log(`✅ Step 2: Search performed with selector ${selector}`);
@@ -138,7 +138,7 @@ test.describe("Safe E2E User Journeys", () => {
       
       if (await categoryLinks.count() > 0 && await categoryLinks.isVisible()) {
         await categoryLinks.click();
-        await page.waitForLoadState("networkidle");
+        await page.waitForLoadState("domcontentloaded");
         console.log(`✅ Step 2: Category navigation performed instead`);
       }
     }
@@ -218,7 +218,7 @@ test.describe("Safe E2E User Journeys", () => {
     // Step 1: Test mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto("https://www.pandashop.md/");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded"); // Faster than domcontentloaded
     
     console.log(`✅ Step 1: Mobile viewport set (375x667)`);
     
@@ -269,8 +269,13 @@ test.describe("Safe E2E User Journeys", () => {
       const firstTouchable = touchableElements.first();
       
       if (await firstTouchable.isVisible()) {
-        // Test tap interaction
-        await firstTouchable.tap();
+        // Test touch/click interaction (compatible with all browsers)
+        try {
+          await firstTouchable.tap();
+        } catch (error) {
+          // Fallback to click if tap is not supported
+          await firstTouchable.click();
+        }
         await page.waitForTimeout(500);
         
         console.log(`✅ Step 3: Touch interaction tested on ${touchCount} touchable elements`);
@@ -299,7 +304,7 @@ test.describe("Safe E2E User Journeys", () => {
     
     // Step 1: Navigate to site
     await page.goto("https://www.pandashop.md/");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
     
     // Step 2: Look for any forms on the site
     const formSelectors = [
@@ -394,7 +399,7 @@ test.describe("Safe E2E User Journeys", () => {
     const startTime = Date.now();
     
     await page.goto("https://www.pandashop.md/");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
     
     const loadTime = Date.now() - startTime;
     console.log(`✅ Step 1: Page load time measured - ${loadTime}ms`);

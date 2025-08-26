@@ -1,10 +1,10 @@
-import { chromium, FullConfig } from "@playwright/test";
+import { chromium } from "@playwright/test";
 
 /**
  * Global setup for Playwright tests
  * Runs once before all tests
  */
-async function globalSetup(config: FullConfig) {
+async function globalSetup() {
   console.log("🚀 Starting Pandashop.md Test Suite Global Setup");
 
   // Check if we can connect to the test environment

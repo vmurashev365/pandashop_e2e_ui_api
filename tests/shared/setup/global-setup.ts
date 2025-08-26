@@ -1,10 +1,9 @@
-import { FullConfig } from '@playwright/test';
 
 /**
  * Global setup for Test Pyramid Framework
  * Executes before all tests across all projects
  */
-async function globalSetup(config: FullConfig) {
+async function globalSetup() {
   console.log('🚀 Starting Test Pyramid Framework - Global Setup');
   console.log('📊 Test Distribution: 70% API, 20% UI, 10% E2E');
   console.log('🛡️ Safety Mode: Enabled (No real orders)');

@@ -162,7 +162,8 @@ export default defineConfig({
       testMatch: 'tests/e2e/**/*.spec.ts',
       use: {
         ...devices['Desktop Chrome'],
-        viewport: { width: 1920, height: 1080 }
+        viewport: { width: 1920, height: 1080 },
+        hasTouch: true // Enable touch support for mobile testing
       },
       timeout: 90000
     },
@@ -173,7 +174,8 @@ export default defineConfig({
       testMatch: 'tests/e2e/**/*.spec.ts',
       use: {
         ...devices['Desktop Firefox'],
-        viewport: { width: 1920, height: 1080 }
+        viewport: { width: 1920, height: 1080 },
+        hasTouch: true // Enable touch support for mobile testing
       },
       timeout: 90000
     },

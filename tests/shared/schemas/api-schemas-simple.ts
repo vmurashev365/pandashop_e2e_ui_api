@@ -18,28 +18,30 @@ export const PaginationSchema = z.object({
 });
 export type Pagination = z.infer<typeof PaginationSchema>;
 
-// Simplified Product Schema for tests
+// Simplified Product Schema for tests - matches REAL API
 export const ProductSchema = z.object({
   id: z.string(),
   name: z.string(),
-  description: z.string(),
   price: z.number().positive(),
-  originalPrice: z.number().positive().optional(),
   currency: CurrencySchema.default("MDL"),
-  category: z.string(),
-  categoryId: z.string(),
-  brand: z.string().optional(),
-  sku: z.string(),
   availability: z.enum(["available", "out_of_stock", "pre_order"]),
+  category: z.string(),
+  brand: z.string(),
+  url: z.string(),
+  // Optional fields that might be present in detailed view
+  description: z.string().optional(),
+  categoryId: z.string().optional(),
+  sku: z.string().optional(),
+  images: z.array(z.string()).optional(),
+  originalPrice: z.number().positive().optional(),
   stock: z.number().int().nonnegative().optional(),
-  images: z.array(z.string()),
   tags: z.array(z.string()).optional(),
   rating: z.number().min(0).max(5).optional(),
   reviewCount: z.number().int().nonnegative().optional(),
   specifications: z.record(z.string()).optional(),
   variants: z.array(z.any()).optional(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
 });
 export type Product = z.infer<typeof ProductSchema>;
 
@@ -56,9 +58,10 @@ export const SearchFiltersSchema = z.object({
 });
 export type SearchFilters = z.infer<typeof SearchFiltersSchema>;
 
-// Product List Response Schema
+// Product List Response Schema - matches REAL API structure
 export const ProductListResponseSchema = z.object({
-  data: z.array(ProductSchema),
+  products: z.array(ProductSchema), // Primary array 
+  data: z.array(ProductSchema),     // Duplicate array for compatibility
   pagination: PaginationSchema,
 });
 export type ProductListResponse = z.infer<typeof ProductListResponseSchema>;
